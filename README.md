@@ -53,6 +53,14 @@ npm run tauri build
 
 El `.app` queda en `src-tauri/target/release/bundle/macos/`.
 
+## Documentación
+
+El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arquitectura_agent). En este repositorio:
+
+- [AGENTS.md](AGENTS.md) — por dónde empezar.
+- [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md) y [evolución](CHANGELOG.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar.
+
 ## Cómo está armada
 
 - `src-tauri/`: lógica en Rust. Analiza, calcula tamaños y mueve a la Papelera.
