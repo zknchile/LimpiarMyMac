@@ -74,12 +74,12 @@ button { cursor: pointer; }
   color: var(--muted);
 }
 
-.titlebar-actions {
-  position: absolute;
-  right: 16px;
-  z-index: 2;
+.content {
+  flex: 1;
+  min-height: 0;
+  position: relative;
   display: flex;
-  gap: 8px;
+  flex-direction: column;
 }
 
 #view {
@@ -88,6 +88,15 @@ button { cursor: pointer; }
   display: flex;
   flex-direction: column;
 }
+
+#modal-root {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#modal-root:not(:empty) { pointer-events: auto; }
 
 .home, .scanning, .done {
   flex: 1;
@@ -201,12 +210,12 @@ h1 {
 .btn-quiet { background: transparent; box-shadow: none; height: 32px; color: var(--muted); }
 .btn-quiet:hover { background: var(--hover); }
 .btn-quit {
-  height: 30px;
-  padding: 0 14px;
+  height: 48px;
+  padding: 0 18px;
   border: 1px solid var(--line);
   background: var(--fill);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 620;
 }
 .btn-quit:hover { background: var(--fill-strong); }
 .btn-danger {
@@ -374,6 +383,19 @@ h1 {
   border-bottom: 2px solid white;
 }
 
+.dock {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px 18px;
+  border-top: 1px solid var(--line);
+  background: light-dark(rgba(255, 255, 255, 0.28), rgba(0, 0, 0, 0.12));
+  backdrop-filter: blur(20px);
+  z-index: 30;
+}
+
 .footer {
   justify-content: space-between;
   gap: 16px;
@@ -440,7 +462,7 @@ h1 {
 }
 
 .modal-back {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.28);
   display: grid;

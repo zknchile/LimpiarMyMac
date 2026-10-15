@@ -3,7 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 import { formatBytes, selectionOf } from "./selection.js";
 
 const view = document.querySelector("#view");
-const titlebarActions = document.querySelector("#titlebar-actions");
+const dock = document.querySelector("#dock");
 const modalRoot = document.querySelector("#modal-root");
 
 const state = {
@@ -116,13 +116,18 @@ async function quit() {
   await invoke("quit");
 }
 
-function render() {
-  const rescan = state.report && state.screen !== "home"
-    ? `<button class="btn btn-quiet" id="rescan">Analizar de nuevo</button>`
-    : "";
-  titlebarActions.innerHTML = `${rescan}<button class="btn btn-quit" id="quit">Salir</button>`;
-  document.querySelector("#rescan")?.addEventListener("click", startScan);
+function renderDock() {
+  const busy = state.screen === "scanning" || state.screen === "cleaning";
+  const label = state.report ? "Analizar de nuevo" : "Analizar esta Mac";
+  dock.innerHTML = `
+    <button class="btn btn-primary" id="scan" ${busy ? "disabled" : ""}>${label}</button>
+    <button class="btn btn-quit" id="quit">Salir</button>`;
+  document.querySelector("#scan")?.addEventListener("click", startScan);
   document.querySelector("#quit")?.addEventListener("click", quit);
+}
+
+function render() {
+  renderDock();
 
   if (state.screen === "home") view.innerHTML = homeHtml();
   else if (state.screen === "scanning") view.innerHTML = scanningHtml();
@@ -145,7 +150,6 @@ function homeHtml() {
       </div>
       <h1>Cristal</h1>
       <p class="lede">Encuentra cachés, restos de apps borradas y basura de los navegadores. Tú decides qué se mueve a la Papelera.</p>
-      <button class="btn btn-primary" id="scan">Analizar esta Mac</button>
       <div class="chips">
         <span class="chip">Primero analiza</span>
         <span class="chip">Tú eliges</span>
@@ -194,7 +198,6 @@ function doneHtml() {
       ${notes.map((note) => `<p class="done-note">${escapeHtml(note)}</p>`).join("")}
       ${failures.length ? `<div class="banner">${failures.length} no se pudieron mover. ${escapeHtml(failures[0].path || "")} ${escapeHtml(failures[0].message)}</div>` : ""}
       <div class="chips">
-        <button class="btn btn-primary" id="scan">Analizar de nuevo</button>
         <button class="btn" id="open-trash">Abrir Papelera</button>
       </div>
     </section>`;
@@ -305,7 +308,6 @@ function filterItems(items) {
 }
 
 function bind() {
-  document.querySelector("#scan")?.addEventListener("click", startScan);
   document.querySelector("#open-confirm")?.addEventListener("click", () => {
     state.confirm = true;
     render();

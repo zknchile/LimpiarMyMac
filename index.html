@@ -11,11 +11,13 @@
       <header class="titlebar">
         <div class="titlebar-drag" data-tauri-drag-region></div>
         <div class="titlebar-title" data-tauri-drag-region>Cristal</div>
-        <div class="titlebar-actions" id="titlebar-actions"></div>
       </header>
-      <main id="view"></main>
+      <div class="content">
+        <main id="view"></main>
+        <div id="modal-root"></div>
+      </div>
+      <footer class="dock" id="dock"></footer>
     </div>
-    <div id="modal-root"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

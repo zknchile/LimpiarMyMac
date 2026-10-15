@@ -28,7 +28,7 @@ Los elementos marcados como **Revisar** pueden incluir documentos. Ábrelos con 
 2. Revisa la selección. Lo seguro ya viene marcado. El tamaño cambia al marcar o desmarcar; si no queda nada, muestra 0 B. La barra dice cuánto hay seleccionado de lo encontrado, por ejemplo `4.2 GB de 6.1 GB`.
 3. Pulsa **Revisar y limpiar** y confirma.
 
-**Salir** cierra la app. Está siempre arriba a la derecha.
+**Salir** cierra la app. Está siempre abajo a la derecha, a la derecha de **Analizar**.
 
 ## Requisitos
 
@@ -64,7 +64,7 @@ El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arq
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
 - [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md).
 
 ## Cómo está armada
 
