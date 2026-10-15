@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cristal</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="window">
+      <header class="titlebar">
+        <div class="titlebar-drag" data-tauri-drag-region></div>
+        <div class="titlebar-title" data-tauri-drag-region>Cristal</div>
+        <div class="titlebar-actions" id="titlebar-actions"></div>
+      </header>
+      <main id="view"></main>
+    </div>
+    <div id="modal-root"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
