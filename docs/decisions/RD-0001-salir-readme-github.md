@@ -36,4 +36,4 @@ La persona lo pidió después de ver la app en marcha y decir que quedaba muy bu
 
 ## Related Tests
 
-No hay una prueba automática del botón. La comprobación de compilación fue `cargo check` del crate después de añadir `quit`. La publicación se comprobó con `gh repo view`. Pendiente un identificador `TEST-...` de interfaz; no se inventa.
+No hay una prueba automática del botón. Ese faltante está en [casos](../testing/TEST-CASES.md#sin-ficha), sin ID. La comprobación de compilación fue `cargo check` del crate después de añadir `quit`. La publicación se comprobó con `gh repo view`.

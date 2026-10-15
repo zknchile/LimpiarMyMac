@@ -5,6 +5,7 @@ import { formatBytes, selectionOf } from "./selection.js";
 const GB = 1024 ** 3;
 const MB = 1024 ** 2;
 
+// TEST-selection-001
 test("una selección vacía no hereda el total encontrado", () => {
   const items = [
     { id: "caches-1", bytes: 2 * GB },
@@ -17,6 +18,7 @@ test("una selección vacía no hereda el total encontrado", () => {
   assert.equal(formatBytes(result.bytes), "0 B");
 });
 
+// TEST-selection-002
 test("marcar y desmarcar cambia el tamaño seleccionado", () => {
   const items = [
     { id: "caches-1", bytes: 2 * GB },
@@ -29,6 +31,7 @@ test("marcar y desmarcar cambia el tamaño seleccionado", () => {
   assert.notEqual(formatBytes(onlyLarge.bytes), formatBytes(both.bytes));
 });
 
+// TEST-selection-003
 test("ochenta MB sobre un total en GB cambian el texto", () => {
   const before = formatBytes(15 * GB);
   const after = formatBytes(15 * GB - 80 * MB);

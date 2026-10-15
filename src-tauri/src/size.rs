@@ -64,6 +64,7 @@ pub fn older_than_days(path: &Path, days: u64) -> bool {
 mod tests {
     use super::*;
 
+    // TEST-size-001
     #[test]
     fn path_size_ignores_container_metadata() {
         let stamp = std::time::SystemTime::now()

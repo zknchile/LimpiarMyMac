@@ -436,6 +436,7 @@ mod tests {
         PathBuf::from("/Users/test")
     }
 
+    // TEST-safety-001
     #[test]
     fn allows_cache_child_and_rejects_documents() {
         let home = home();
@@ -449,6 +450,7 @@ mod tests {
         assert!(!is_deletable(&home, Path::new("/Users/test/Library/Caches")));
     }
 
+    // TEST-safety-002
     #[test]
     fn rejects_parent_escape_and_allows_installer() {
         let home = home();
@@ -470,6 +472,7 @@ mod tests {
         ));
     }
 
+    // TEST-safety-003
     #[test]
     fn apple_support_is_private_but_apple_cache_is_not() {
         let home = home();
@@ -486,6 +489,7 @@ mod tests {
         assert!(!protected_support_name("Slack"));
     }
 
+    // TEST-safety-004
     #[test]
     fn container_plan_trashes_real_files_and_unlinks_escaping_links() {
         let stamp = std::time::SystemTime::now()
@@ -531,6 +535,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(&home);
     }
 
+    // TEST-safety-005
     #[test]
     fn nested_apple_file_in_third_party_container_is_not_private() {
         let home = home();
@@ -552,6 +557,7 @@ mod tests {
         ));
     }
 
+    // TEST-safety-006
     #[test]
     fn container_plan_skips_containermanager_metadata() {
         let stamp = std::time::SystemTime::now()

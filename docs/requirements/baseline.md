@@ -10,7 +10,7 @@ Línea base de lo que la persona usuaria pidió en la sesión del 2026-10-15. No
 | REQ-0004 | Botón Salir siempre visible, en la esquina inferior derecha y a la derecha de Analizar. | Confirmado. El sitio cambió el 2026-10-15; ver [RD-0002](../decisions/RD-0002-salir-abajo-a-la-derecha.md). |
 | REQ-0005 | README que resuma el proyecto. | Confirmado e implementado. |
 | REQ-0006 | Subir el proyecto a GitHub. | Confirmado. Repositorio público https://github.com/zknchile/LimpiarMyMac. |
-| REQ-0007 | Documentar tareas, cambios y decisiones con las definiciones de [Arquitectura_agent](https://github.com/zknchile/Arquitectura_agent). | Confirmado. Este documento y los enlazados son el resultado. |
+| REQ-0007 | Documentar tareas, cambios y decisiones con las definiciones de [Arquitectura_agent](https://github.com/zknchile/Arquitectura_agent). | Confirmado. Este documento y los enlazados son el resultado. El catálogo de pruebas aplica la guía del marco del 2026-10-15; no cambia el producto. |
 
 ## Fuera de alcance confirmado
 

@@ -24,4 +24,4 @@ La fuente vigente es `src-tauri/src/safety.rs`, decidida en [ADR-0002](../decisi
 
 El detector de restos compara nombres con apps instaladas. Puede proponer una carpeta de documentos de una herramienta que no tenga `.app`. Esas filas no vienen marcadas y dicen que hay que revisarlas. No es una garantía de que la persona las lea.
 
-Ampliar la lista blanca o marcar restos por defecto exige actualizar este documento y las pruebas de `safety.rs` en el mismo cambio.
+Ampliar la lista blanca o marcar restos por defecto exige actualizar este documento, las pruebas de `safety.rs` y su ficha en [casos](../testing/TEST-CASES.md) en el mismo cambio.

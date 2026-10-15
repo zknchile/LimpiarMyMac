@@ -2,6 +2,7 @@
 
 ## 2026-10-15
 
+- Las pruebas automatizadas quedaron fichadas con ID, reproducción y una ejecución registrada, según la documentación de pruebas de Arquitectura_agent. [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). No se inventaron casos de interfaz ni de limpieza real.
 - Salir quedó en la esquina inferior derecha, a la derecha de Analizar, y se ve en todas las pantallas. [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md).
 - La nota del registro interno ya no se corta. Si un contenedor solo conserva ese registro y un `.DS_Store`, no vuelve a listarse. [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md).
 - Una copia `com.apple…` dentro de otra app ya no tumba la limpieza. Mail y las preferencias de Apple siguen prohibidos. Si algo se rechaza, el aviso dice la ruta. [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md).

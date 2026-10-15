@@ -46,7 +46,7 @@ npm test
 npm run tauri dev
 ```
 
-`npm test` comprueba el tamaño de la selección, sin abrir la ventana. Las reglas de rutas se prueban con `cargo test --lib` dentro de `src-tauri`.
+`npm test` comprueba el tamaño de la selección, sin abrir la ventana. Las reglas de rutas se prueban con `cargo test --lib` dentro de `src-tauri`. Qué cubre cada prueba está en [casos](docs/testing/TEST-CASES.md).
 
 La primera compilación tarda un poco: Tauri descarga y compila sus dependencias.
 
@@ -63,8 +63,8 @@ El `.app` queda en `src-tauri/target/release/bundle/macos/`.
 El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arquitectura_agent). En este repositorio:
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
-- [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md).
+- [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md), [pruebas](docs/testing/TEST-CASES.md) y [evolución](CHANGELOG.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md).
 
 ## Cómo está armada
 

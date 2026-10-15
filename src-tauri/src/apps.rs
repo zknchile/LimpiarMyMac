@@ -243,6 +243,7 @@ mod tests {
         }
     }
 
+    // TEST-apps-001
     #[test]
     fn matches_apps_and_cli_tools() {
         let inv = sample();
