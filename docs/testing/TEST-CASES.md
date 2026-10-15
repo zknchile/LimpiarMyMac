@@ -17,6 +17,9 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | [TEST-selection-001](#test-selection-001) | selection | selección vacía en 0 B |
 | [TEST-selection-002](#test-selection-002) | selection | marcar y desmarcar cambia el tamaño |
 | [TEST-selection-003](#test-selection-003) | selection | 80 MB cambian un texto en GB |
+| [TEST-place-001](#test-place-001) | place | la misma categoría conserva la grilla |
+| [TEST-place-002](#test-place-002) | place | otra categoría no hereda la lista |
+| [TEST-place-003](#test-place-003) | place | otra pantalla no reutiliza el sitio |
 
 ## TEST-safety-001
 
@@ -160,6 +163,45 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Reproducción | `node --test --test-name-pattern "ochenta MB sobre un total en GB cambian el texto" src/selection.test.js` en la raíz, en el host. |
 | Estado de implementación | Implementada. |
 | Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+
+## TEST-place-001
+
+| Campo | Contenido |
+| --- | --- |
+| Identificación | TEST-place-001. Al marcar en la misma categoría, la grilla, la barra y el foco se quedan. Componente `place`. Unitaria, sin ventana. |
+| Objetivo y trazabilidad | [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md), [TASK-0010-02](../plans/TASKS-0010-grilla-sin-saltar.md#task-0010-02--conservar-el-desplazamiento). No cambia [REQ-0002](../requirements/baseline.md): solo evita que el redibujo suba la lista. |
+| Implementación | `src/place.test.js`, nombre `la misma categoría conserva la grilla y el foco`. Llama a `placeToKeep` de `src/place.js`. |
+| Preparación | Categoría `caches`, lista en 480, barra en 120, foco en `caches-4`. Sin DOM ni Tauri. |
+| Acción y resultado esperado | Si la pantalla sigue en resultados y la categoría no cambia, se conservan 480, 120 y `caches-4`. |
+| Reproducción | En la raíz, en el host: `node --test --test-name-pattern "la misma categoría conserva la grilla y el foco" src/place.test.js`. |
+| Estado de implementación | Implementada. |
+| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
+
+## TEST-place-002
+
+| Campo | Contenido |
+| --- | --- |
+| Identificación | TEST-place-002. Abrir otra categoría no hereda el desplazamiento de la lista anterior. La barra sí se queda. Componente `place`. Unitaria, sin ventana. |
+| Objetivo y trazabilidad | Mismo defecto de [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md). |
+| Implementación | `src/place.test.js`, nombre `otra categoría no hereda el desplazamiento de la lista`. |
+| Preparación | El mismo punto de partida que TEST-place-001. La categoría siguiente es `logs`. |
+| Acción y resultado esperado | `list` es nulo y no hay foco que devolver. `sidebar` sigue en 120. |
+| Reproducción | `node --test --test-name-pattern "otra categoría no hereda el desplazamiento de la lista" src/place.test.js` en la raíz, en el host. |
+| Estado de implementación | Implementada. |
+| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
+
+## TEST-place-003
+
+| Campo | Contenido |
+| --- | --- |
+| Identificación | TEST-place-003. Salir de resultados no reutiliza el sitio. Abrir la confirmación conserva la lista, pero no devuelve el foco a la casilla. Componente `place`. Unitaria, sin ventana. |
+| Objetivo y trazabilidad | [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md). La hoja no debe perder sus controles. |
+| Implementación | `src/place.test.js`, nombre `salir de resultados o abrir la confirmación no reutiliza el sitio`. |
+| Preparación | El mismo punto de partida. Variantes: pantalla `cleaning`, y resultados con `confirm`. |
+| Acción y resultado esperado | Al limpiar, lista, barra y foco quedan vacíos. Con la hoja abierta, la lista sigue en 480 y el foco no vuelve a la casilla. |
+| Reproducción | `node --test --test-name-pattern "salir de resultados o abrir la confirmación no reutiliza el sitio" src/place.test.js` en la raíz, en el host. |
+| Estado de implementación | Implementada. |
+| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
 
 ## Sin ficha
 

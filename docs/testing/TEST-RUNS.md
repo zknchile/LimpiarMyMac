@@ -11,7 +11,7 @@ La definición de cada caso está en [TEST-CASES.md](TEST-CASES.md). Una fila de
 - **Alcance:** TEST-safety-001 a TEST-safety-006, TEST-apps-001, TEST-size-001, TEST-selection-001 a TEST-selection-003. Ningún caso omitido ni bloqueado.
 - **Comandos:** `cargo test --lib` en `src-tauri`. `npm test` en la raíz (`node --test src/selection.test.js`).
 - **Resultado:** aprobada. Rust: 8 passed, 0 failed, 0 ignored. Node: 3 pass, 0 fail, 0 skipped.
-- **No cubre:** análisis del disco, movimiento a la Papelera, botón Salir, contraste ni `prefers-reduced-transparency`.
+- **No cubre:** análisis del disco, movimiento a la Papelera, botón Salir, contraste ni `prefers-reduced-transparency`. Esta ejecución es anterior a TEST-place-001.
 
 Salida de `cargo test --lib`:
 
@@ -39,4 +39,27 @@ Salida de `npm test`:
 ok 1 - una selección vacía no hereda el total encontrado
 ok 2 - marcar y desmarcar cambia el tamaño seleccionado
 ok 3 - ochenta MB sobre un total en GB cambian el texto
+```
+
+## RUN-2026-10-15-02
+
+- **Fecha:** 2026-10-15.
+- **Ejecutor:** agente de la sesión de [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md).
+- **Revisión:** commit `37f0ffe` más cambios locales sin commitear. El cambio de comportamiento está en `src/place.js` y `src/main.js`. No se tocó Rust.
+- **Entorno:** host macOS 27.0.1 arm64, no Docker ([ADR-0001](../decisions/ADR-0001-app-escritorio-tauri.md)). Node `v22.17.0`. Sin imagen ni servicio.
+- **Alcance:** TEST-place-001, TEST-place-002 y TEST-place-003. En el mismo comando también pasaron TEST-selection-001 a TEST-selection-003. Ningún caso omitido ni bloqueado.
+- **Comando:** `npm test` en la raíz (`node --test src/*.test.js`).
+- **Resultado:** aprobada. Node: 6 pass, 0 fail, 0 skipped.
+- **No cubre:** el clic real en la ventana. La prueba decide qué desplazamiento se conserva; no mide el scroll del WebView.
+
+Salida relevante:
+
+```text
+ok 1 - la misma categoría conserva la grilla y el foco
+ok 2 - otra categoría no hereda el desplazamiento de la lista
+ok 3 - salir de resultados o abrir la confirmación no reutiliza el sitio
+# tests 6
+# pass 6
+# fail 0
+# skipped 0
 ```

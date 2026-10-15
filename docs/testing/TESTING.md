@@ -29,7 +29,7 @@ npm test
 
 ## Qué cubren y qué no
 
-Las 11 fichas cubren la lista blanca, el plan de un contenedor de prueba, el emparejamiento de nombres y el texto del tamaño seleccionado. No cubren un análisis del disco de la persona, el comando que mueve a la Papelera ni el clic en la ventana.
+Las fichas cubren la lista blanca, el plan de un contenedor de prueba, el emparejamiento de nombres, el texto del tamaño seleccionado y la decisión de no subir la grilla al marcar. No cubren un análisis del disco de la persona, el comando que mueve a la Papelera ni el clic en la ventana.
 
 ## Manual
 

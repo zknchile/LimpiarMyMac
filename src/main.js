@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { formatBytes, selectionOf } from "./selection.js";
+import { placeToKeep } from "./place.js";
 
 const view = document.querySelector("#view");
 const dock = document.querySelector("#dock");
@@ -126,7 +127,36 @@ function renderDock() {
   document.querySelector("#quit")?.addEventListener("click", quit);
 }
 
+let placeToken = 0;
+
+function capturePlace() {
+  return {
+    screen: document.querySelector(".workspace") ? "results" : "other",
+    active: document.querySelector(".nav-btn.active")?.dataset.open ?? state.active,
+    list: document.querySelector(".list")?.scrollTop ?? 0,
+    sidebar: document.querySelector(".sidebar")?.scrollTop ?? 0,
+    focusId: document.activeElement?.dataset?.id || "",
+  };
+}
+
+function applyPlace(keep) {
+  const token = ++placeToken;
+  const apply = () => {
+    if (token !== placeToken) return;
+    const sidebar = document.querySelector(".sidebar");
+    const list = document.querySelector(".list");
+    if (sidebar && keep.sidebar != null) sidebar.scrollTop = keep.sidebar;
+    if (list && keep.list != null) list.scrollTop = keep.list;
+  };
+  apply();
+  if (keep.focusId) {
+    document.querySelector(`[data-id="${CSS.escape(keep.focusId)}"]`)?.focus({ preventScroll: true });
+  }
+  requestAnimationFrame(apply);
+}
+
 function render() {
+  const before = capturePlace();
   renderDock();
 
   if (state.screen === "home") view.innerHTML = homeHtml();
@@ -137,6 +167,11 @@ function render() {
 
   bind();
   renderModal();
+  applyPlace(placeToKeep(before, {
+    screen: state.screen,
+    active: state.active,
+    confirm: state.confirm,
+  }));
 }
 
 function homeHtml() {

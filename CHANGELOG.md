@@ -2,6 +2,7 @@
 
 ## 2026-10-15
 
+- Marcar un elemento ya no sube la grilla al inicio. La lista se queda donde estaba el clic. [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). La build para probarlo es la 0.1.1.
 - Las pruebas automatizadas quedaron fichadas con ID, reproducción y una ejecución registrada, según la documentación de pruebas de Arquitectura_agent. [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). No se inventaron casos de interfaz ni de limpieza real.
 - Salir quedó en la esquina inferior derecha, a la derecha de Analizar, y se ve en todas las pantallas. [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md).
 - La nota del registro interno ya no se corta. Si un contenedor solo conserva ese registro y un `.DS_Store`, no vuelve a listarse. [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md).
