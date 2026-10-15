@@ -11,7 +11,7 @@
 | --- | --- | --- | --- | --- |
 | TASK-0011-01 | Dejar el plan | Ninguna | Agente principal | completada |
 | TASK-0011-02 | Dibujar los componentes | TASK-0011-01 | Agente principal | completada |
-| TASK-0011-03 | Subir a GitHub | TASK-0011-02 | Agente principal | en curso |
+| TASK-0011-03 | Subir a GitHub | TASK-0011-02 | Agente principal | completada |
 
 ## TASK-0011-01 — Dejar el plan
 
@@ -44,4 +44,4 @@
 - **Aceptación y validación:** `git status` queda limpio y `HEAD` coincide con `origin/main`. `git diff --check` no reporta espacios conflictivos.
 - **Responsable y estado:** según listado.
 - **Paralelismo, límites y entrega:** cierre. Entrega a la persona usuaria.
-- **Resultado y evidencia:** pendiente.
+- **Resultado y evidencia:** el 2026-10-15, `863ec71` quedó en `origin/main`. No se creó release. `HEAD` coincidía con el remoto tras el push. Este cierre es el commit siguiente.
