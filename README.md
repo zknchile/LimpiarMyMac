@@ -64,12 +64,71 @@ El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arq
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
 - [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md), [pruebas](docs/testing/TEST-CASES.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md).
 
 ## Cómo está armada
 
-- `src-tauri/`: lógica en Rust. Analiza, calcula tamaños y mueve a la Papelera.
-- `src/`: interfaz. Primero resume, después deja revisar cada categoría.
-- `safety.rs`: lista de rutas permitidas. Aunque la interfaz pidiera otra cosa, Rust rechaza lo que está fuera.
+La ventana y el análisis viven en el mismo proceso. No hay servicio HTTP. El detalle de esa forma está en [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md).
+
+```mermaid
+flowchart LR
+  subgraph ui [Interfaz]
+    view["main.js<br/>pantallas"]
+    selection["selection.js<br/>tamaño marcado"]
+    place["place.js<br/>sitio de la grilla"]
+  end
+
+  subgraph bridge [Tauri]
+    commands["lib.rs<br/>scan, clean, reveal,<br/>open_trash, quit"]
+    state["último informe"]
+  end
+
+  subgraph core [Rust]
+    scanmod[scan]
+    appsmod[apps]
+    sizemod[size]
+    safemod[safety]
+    cleanmod[clean]
+    modelmod[model]
+  end
+
+  subgraph host [macOS]
+    disk[carpeta del usuario]
+    trash[Papelera]
+    glass[Liquid Glass]
+  end
+
+  view --> selection
+  view --> place
+  view -->|"invoke"| commands
+  commands -->|"scan-progress<br/>clean-progress"| view
+  commands --> state
+  commands --> scanmod
+  commands --> cleanmod
+  scanmod --> appsmod
+  scanmod --> sizemod
+  scanmod --> safemod
+  cleanmod --> safemod
+  scanmod --> modelmod
+  cleanmod --> modelmod
+  scanmod --> disk
+  cleanmod --> trash
+  glass --> commands
+```
+
+| Pieza | Qué hace |
+| --- | --- |
+| `src/main.js` | Pinta las pantallas y llama a Tauri. Escucha el progreso. |
+| `src/selection.js` | Cuenta cuánto hay marcado. No decide si una ruta se puede borrar. |
+| `src/place.js` | Decide si, al redibujar, la grilla se queda donde estaba. |
+| `src-tauri/src/lib.rs` | Expone los comandos, guarda el último informe y aplica el vidrio de la ventana. |
+| `scan.rs` | Recorre la carpeta del usuario y propone elementos. |
+| `apps.rs` | Lee qué apps están instaladas, para no tratar sus datos como restos. |
+| `size.rs` | Mide el peso y la antigüedad. |
+| `safety.rs` | Lista blanca. Rechaza lo que está fuera, aunque la interfaz lo pida. |
+| `clean.rs` | Mueve a la Papelera solo identificadores del último análisis. |
+| `model.rs` | Forma del informe que cruza la ventana y Rust. |
+
+Liquid Glass no es CSS. En macOS 26 o posterior, Tauri lo aplica a la ventana nativa. Si no está disponible, usa vibrancy.
 
 La limpieza y el análisis usan las mismas reglas. Un archivo solo se puede mover si estaba en el último análisis y vive en una carpeta permitida.
