@@ -29,6 +29,9 @@ El análisis heurístico puede marcar carpetas que todavía contienen documentos
 - Un falso positivo de “app desinstalada” puede seguir apareciendo. Queda en Revisar y sin marcar. La persona puede usar Ver antes de aceptarlo.
 - El informe vive en memoria. Cerrar la app obliga a analizar de nuevo antes de limpiar.
 - Vaciar la Papelera no se puede deshacer. La interfaz lo dice y usa otro botón si esa opción está incluida.
+- Desde el 2026-10-15, una carpeta con enlaces hacia fuera no se entrega entera a Finder. El caso comprobado es `~/Library/Containers/com.utmapp.UTM`: Finder lo rechazaba por permisos y adentro hay enlaces al Escritorio y al Llavero. Se mueven los archivos reales y se quita solo el enlace.
+- Ese mismo contenedor conserva `.com.apple.containermanagerd.metadata.plist`. Ni Finder ni `rm` pueden quitarlo. No se cuenta como fallo ni como espacio recuperable.
+- Un hijo llamado `com.apple…` dentro de una app de terceros no es dato de Apple. La prohibición mira el nombre del contenedor o de la preferencia, no cada archivo interno.
 
 ## Related Requirements
 

@@ -434,7 +434,7 @@ fn scan_leftovers(ctx: &mut ScanCtx, browser_roots: &HashSet<PathBuf>) -> Vec<Cl
         "Library/Containers",
         Risk::Review,
         false,
-        "Contenedor de una app que no está instalada. Puede incluir documentos.",
+        "Contenedor de una app que no está instalada. Puede incluir documentos. Los enlaces a tu Escritorio, Descargas o Llavero no se mueven. macOS puede conservar un registro interno de unos pocos KB.",
         &mut items,
     );
     scan_id_dir(

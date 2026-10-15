@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { formatBytes, selectionOf } from "./selection.js";
 
 const view = document.querySelector("#view");
 const titlebarActions = document.querySelector("#titlebar-actions");
@@ -41,20 +42,6 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function formatBytes(bytes) {
-  const value = Number(bytes) || 0;
-  if (value < 1024) return `${value} B`;
-  const units = ["KB", "MB", "GB", "TB"];
-  let size = value / 1024;
-  let index = 0;
-  while (size >= 1024 && index < units.length - 1) {
-    size /= 1024;
-    index += 1;
-  }
-  const digits = size >= 10 || index === 0 ? 0 : 1;
-  return `${size.toFixed(digits)} ${units[index]}`;
-}
-
 function itemsOf(report = state.report) {
   return report ? report.categories.flatMap((category) => category.items) : [];
 }
@@ -64,7 +51,11 @@ function selectedItems() {
 }
 
 function selectedBytes() {
-  return selectedItems().reduce((sum, item) => sum + item.bytes, 0);
+  return selectionOf(itemsOf(), state.selection).bytes;
+}
+
+function categorySelection(category) {
+  return selectionOf(category.items, state.selection);
 }
 
 function escapeHtml(value) {
@@ -188,8 +179,9 @@ function cleaningHtml() {
 }
 
 function doneHtml() {
-  const result = state.result || { moved: 0, bytes: 0, failures: [], emptied_trash: false };
+  const result = state.result || { moved: 0, bytes: 0, failures: [], emptied_trash: false, notes: [] };
   const failures = result.failures || [];
+  const notes = result.notes || [];
   return `
     <section class="done">
       <div class="orb" aria-hidden="true">
@@ -199,7 +191,8 @@ function doneHtml() {
       </div>
       <h1>Listo</h1>
       <p class="lede">${result.moved} elementos · ${formatBytes(result.bytes)}. ${result.emptied_trash ? "La Papelera se vació." : "Puedes restaurarlos desde la Papelera."}</p>
-      ${failures.length ? `<div class="banner">${failures.length} no se pudieron mover. ${escapeHtml(failures[0].message)}</div>` : ""}
+      ${notes.map((note) => `<p class="done-note">${escapeHtml(note)}</p>`).join("")}
+      ${failures.length ? `<div class="banner">${failures.length} no se pudieron mover. ${escapeHtml(failures[0].path || "")} ${escapeHtml(failures[0].message)}</div>` : ""}
       <div class="chips">
         <button class="btn btn-primary" id="scan">Analizar de nuevo</button>
         <button class="btn" id="open-trash">Abrir Papelera</button>
@@ -216,7 +209,10 @@ function resultsHtml() {
     <section class="workspace">
       <aside class="sidebar">
         ${navButton("summary", "Resumen", formatBytes(selectedBytes()))}
-        ${categories.map((category) => navButton(category.id, category.title, formatBytes(category.items.reduce((sum, item) => sum + item.bytes, 0)))).join("")}
+        ${categories.map((category) => {
+          const picked = categorySelection(category);
+          return navButton(category.id, category.title, `${formatBytes(picked.bytes)} de ${formatBytes(picked.total)}`);
+        }).join("")}
       </aside>
       <div class="pane">
         ${state.error ? `<div class="banner">${escapeHtml(state.error)}</div>` : ""}
@@ -243,14 +239,13 @@ function summaryHtml(report) {
     </div>
     <div class="list">
       ${report.categories.map((category) => {
-        const picked = category.items.filter((item) => state.selection.has(item.id));
-        const bytes = picked.reduce((sum, item) => sum + item.bytes, 0);
+        const picked = categorySelection(category);
         return `<button class="row cat-row" data-open="${category.id}">
           <div class="grow">
             <div class="name">${escapeHtml(category.title)}</div>
-            <div class="sub">${picked.length} de ${category.items.length} seleccionados</div>
+            <div class="sub">${picked.count} de ${category.items.length} seleccionados</div>
           </div>
-          <div class="size">${formatBytes(bytes || category.items.reduce((sum, item) => sum + item.bytes, 0))}</div>
+          <div class="size">${formatBytes(picked.bytes)}</div>
         </button>`;
       }).join("")}
     </div>`;
@@ -259,11 +254,13 @@ function summaryHtml(report) {
 function categoryHtml(category, items) {
   const all = items.length > 0 && items.every((item) => state.selection.has(item.id));
   const some = items.some((item) => state.selection.has(item.id));
+  const picked = categorySelection(category);
   return `
     <div class="pane-head">
       <div>
         <h2>${escapeHtml(category.title)}</h2>
         <p>${escapeHtml(category.description)}</p>
+        <p class="picked">${picked.count} seleccionados · ${formatBytes(picked.bytes)}</p>
       </div>
       <div class="toolbar">
         <input class="search" id="search" placeholder="Buscar" value="${escapeHtml(state.query)}" />

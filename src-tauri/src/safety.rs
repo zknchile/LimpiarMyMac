@@ -135,16 +135,57 @@ pub fn is_deletable(home: &Path, path: &Path) -> bool {
 }
 
 /// Datos de Apple fuera de cachés y registros. Esos no se proponen.
+///
+/// La identidad es la app o el archivo bajo una raiz permitida, no cada
+/// hijo. `com.apple.security.plist` dentro de UTM es una copia de esa app,
+/// no el Llavero ni las preferencias del sistema.
 pub fn is_apple_private(home: &Path, path: &Path) -> bool {
+    let path = normalize(path);
     let caches = library(home).join("Caches");
     let logs = library(home).join("Logs");
     if path.starts_with(&caches) || path.starts_with(&logs) {
         return false;
     }
-    path.components().any(|component| {
-        let name = component.as_os_str().to_string_lossy().to_lowercase();
-        name.starts_with("com.apple.") || name.starts_with("group.com.apple.")
-    })
+    if let Some(identity) = leftover_identity(home, &path) {
+        return apple_name(&identity);
+    }
+    path.components().any(|component| apple_name(&component.as_os_str().to_string_lossy()))
+}
+
+fn leftover_identity(home: &Path, path: &Path) -> Option<String> {
+    let lib = library(home);
+    let prefs = lib.join("Preferences");
+    if let Ok(rest) = path.strip_prefix(&prefs) {
+        let mut parts = rest.components();
+        let first = parts.next()?.as_os_str().to_string_lossy().to_string();
+        if first.eq_ignore_ascii_case("ByHost") {
+            return parts.next().map(|part| part.as_os_str().to_string_lossy().to_string());
+        }
+        if first.is_empty() {
+            return None;
+        }
+        return Some(first);
+    }
+    for folder in [
+        "Containers",
+        "Group Containers",
+        "Application Support",
+        "Saved Application State",
+        "HTTPStorages",
+        "WebKit",
+        "Application Scripts",
+        "LaunchAgents",
+    ] {
+        let root = lib.join(folder);
+        if let Ok(rest) = path.strip_prefix(&root) {
+            return rest
+                .components()
+                .next()
+                .map(|part| part.as_os_str().to_string_lossy().to_string())
+                .filter(|name| !name.is_empty());
+        }
+    }
+    None
 }
 
 pub fn apple_name(name: &str) -> bool {
@@ -224,6 +265,133 @@ pub fn protected_support_name(name: &str) -> bool {
     PROTECTED_SUPPORT.iter().any(|item| *item == lower)
 }
 
+/// Un paso para vaciar una carpeta sin seguir enlaces.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Disposal {
+    /// Archivo o carpeta real, sin enlaces hacia fuera.
+    Trash(PathBuf),
+    /// Quitar el enlace. Nunca su destino.
+    Unlink(PathBuf),
+    /// Carpeta que ya no tiene hijos reales. No es la Papelera.
+    RemoveEmpty(PathBuf),
+}
+
+/// Parte una ruta en pasos seguros. Una carpeta con enlaces hacia fuera
+/// no se entrega entera a Finder: Finder puede rechazarla o resolverlos.
+pub fn disposal_plan(home: &Path, root: &Path) -> Result<Vec<Disposal>, String> {
+    let root = normalize(root);
+    if !is_deletable(home, &root) || is_apple_private(home, &root) {
+        return Err(format!("Ruta no permitida: {}", root.display()));
+    }
+    let mut steps = Vec::new();
+    plan_node(home, &root, &root, &mut steps)?;
+    Ok(steps)
+}
+
+fn plan_node(home: &Path, origin: &Path, path: &Path, steps: &mut Vec<Disposal>) -> Result<(), String> {
+    let path = normalize(path);
+    if path != *origin && !path.starts_with(origin) {
+        return Err("La ruta sale de la carpeta elegida.".into());
+    }
+
+    let meta = std::fs::symlink_metadata(&path)
+        .map_err(|_| format!("Ya no está: {}", path.display()))?;
+    let kind = meta.file_type();
+    if kind.is_symlink() {
+        steps.push(Disposal::Unlink(path));
+        return Ok(());
+    }
+    if kind.is_file() {
+        if container_metadata(&path) {
+            return Ok(());
+        }
+        steps.push(Disposal::Trash(checked_target(home, origin, &path)?));
+        return Ok(());
+    }
+    if !kind.is_dir() {
+        return Ok(());
+    }
+
+    // Un enlace o el registro de containermanagerd harían fallar el movimiento
+    // de la carpeta entera. Se parte para no bloquear el resto.
+    if !needs_split(&path)? {
+        steps.push(Disposal::Trash(checked_target(home, origin, &path)?));
+        return Ok(());
+    }
+
+    let entries = std::fs::read_dir(&path)
+        .map_err(|err| format!("No se pudo revisar {}: {err}", path.display()))?;
+    for entry in entries {
+        let entry = entry.map_err(|err| format!("No se pudo revisar {}: {err}", path.display()))?;
+        plan_node(home, origin, &entry.path(), steps)?;
+    }
+    steps.push(Disposal::RemoveEmpty(path));
+    Ok(())
+}
+
+fn checked_target(home: &Path, origin: &Path, path: &Path) -> Result<PathBuf, String> {
+    let target = deletion_target(home, path)?;
+    let origin_root = origin.canonicalize().unwrap_or_else(|_| origin.to_path_buf());
+    let target_root = target.canonicalize().unwrap_or_else(|_| target.clone());
+    if target_root != origin_root && !target_root.starts_with(&origin_root) {
+        return Err(format!(
+            "La ruta sale de la carpeta elegida: {}",
+            path.display()
+        ));
+    }
+    Ok(target)
+}
+
+/// Registro que containermanagerd no deja mover. No es un archivo de la persona.
+pub(crate) fn container_metadata(path: &Path) -> bool {
+    let Some(name) = path.file_name().and_then(|name| name.to_str()) else {
+        return false;
+    };
+    name.starts_with(".com.apple.containermanagerd.") && name.ends_with(".plist")
+}
+
+/// Hay que partir la carpeta: contiene un enlace o un registro que macOS no deja mover.
+pub(crate) fn needs_split(path: &Path) -> Result<bool, String> {
+    let meta = std::fs::symlink_metadata(path)
+        .map_err(|_| format!("Ya no está: {}", path.display()))?;
+    if meta.file_type().is_symlink() || container_metadata(path) {
+        return Ok(true);
+    }
+    if !meta.is_dir() {
+        return Ok(false);
+    }
+    let entries = std::fs::read_dir(path)
+        .map_err(|err| format!("No se pudo revisar {}: {err}", path.display()))?;
+    for entry in entries {
+        let entry = entry.map_err(|err| format!("No se pudo revisar {}: {err}", path.display()))?;
+        if needs_split(&entry.path())? {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+pub(crate) fn contains_container_metadata(path: &Path) -> bool {
+    let Ok(meta) = std::fs::symlink_metadata(path) else {
+        return false;
+    };
+    if meta.file_type().is_symlink() {
+        return false;
+    }
+    if container_metadata(path) {
+        return true;
+    }
+    if !meta.is_dir() {
+        return false;
+    }
+    let Ok(entries) = std::fs::read_dir(path) else {
+        return false;
+    };
+    entries
+        .flatten()
+        .any(|entry| contains_container_metadata(&entry.path()))
+}
+
 /// Confirma que una ruta del informe se puede mover. No sigue enlaces
 /// que salgan de las carpetas permitidas.
 pub fn deletion_target(home: &Path, path: &Path) -> Result<PathBuf, String> {
@@ -236,7 +404,10 @@ pub fn deletion_target(home: &Path, path: &Path) -> Result<PathBuf, String> {
         return Err(format!("Ruta no permitida: {}", path.display()));
     }
     if is_apple_private(home, &path) {
-        return Err("No se tocan datos del sistema de Apple.".into());
+        return Err(format!(
+            "No se tocan datos del sistema de Apple: {}",
+            path.display()
+        ));
     }
 
     if meta.file_type().is_symlink() {
@@ -244,7 +415,8 @@ pub fn deletion_target(home: &Path, path: &Path) -> Result<PathBuf, String> {
     }
 
     if let Ok(canonical) = path.canonicalize() {
-        if !is_deletable(home, &canonical) || is_apple_private(home, &canonical) {
+        let home_root = home.canonicalize().unwrap_or_else(|_| normalize(home));
+        if !is_deletable(&home_root, &canonical) || is_apple_private(&home_root, &canonical) {
             return Err(format!(
                 "La ruta sale de una carpeta permitida: {}",
                 path.display()
@@ -312,5 +484,104 @@ mod tests {
         assert!(protected_support_name("MobileSync"));
         assert!(protected_support_name("com.apple.spotlight"));
         assert!(!protected_support_name("Slack"));
+    }
+
+    #[test]
+    fn container_plan_trashes_real_files_and_unlinks_escaping_links() {
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let home = std::env::temp_dir().join(format!("cristal-safety-{stamp}"));
+        let container = home.join("Library/Containers/com.example.app");
+        let documents = container.join("Data/Documents");
+        let outside = home.join("Desktop");
+        std::fs::create_dir_all(&documents).unwrap();
+        std::fs::create_dir_all(&outside).unwrap();
+        std::fs::write(documents.join("nota.txt"), b"vm").unwrap();
+        std::fs::write(outside.join("secreto.txt"), b"no tocar").unwrap();
+        std::os::unix::fs::symlink(outside.join("secreto.txt"), container.join("Data/Desktop")).unwrap();
+
+        let steps = disposal_plan(&home, &container).unwrap();
+        let trashed: Vec<_> = steps
+            .iter()
+            .filter_map(|step| match step {
+                Disposal::Trash(path) => Some(path.as_path()),
+                _ => None,
+            })
+            .collect();
+        let unlinked: Vec<_> = steps
+            .iter()
+            .filter_map(|step| match step {
+                Disposal::Unlink(path) => Some(path.as_path()),
+                _ => None,
+            })
+            .collect();
+
+        assert!(trashed.iter().any(|path| path.ends_with("Data/Documents")));
+        assert!(unlinked.iter().any(|path| path.ends_with("Data/Desktop")));
+        assert!(steps.iter().all(|step| {
+            let path = match step {
+                Disposal::Trash(path) | Disposal::Unlink(path) | Disposal::RemoveEmpty(path) => path,
+            };
+            !path.starts_with(&outside)
+        }));
+        assert!(!steps.iter().any(|step| matches!(step, Disposal::Trash(path) if path == &container)));
+
+        let _ = std::fs::remove_dir_all(&home);
+    }
+
+    #[test]
+    fn nested_apple_file_in_third_party_container_is_not_private() {
+        let home = home();
+        assert!(!is_apple_private(
+            &home,
+            Path::new("/Users/test/Library/Containers/com.utmapp.QEMUHelper/Data/Library/Preferences/com.apple.security.plist")
+        ));
+        assert!(is_apple_private(
+            &home,
+            Path::new("/Users/test/Library/Preferences/com.apple.security.plist")
+        ));
+        assert!(is_apple_private(
+            &home,
+            Path::new("/Users/test/Library/Preferences/ByHost/com.apple.finder.plist")
+        ));
+        assert!(is_apple_private(
+            &home,
+            Path::new("/Users/test/Library/Containers/com.apple.mail/Data/Library")
+        ));
+    }
+
+    #[test]
+    fn container_plan_skips_containermanager_metadata() {
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let home = std::env::temp_dir().join(format!("cristal-meta-{stamp}"));
+        let container = home.join("Library/Containers/com.example.app");
+        let documents = container.join("Data/Documents");
+        std::fs::create_dir_all(&documents).unwrap();
+        std::fs::write(documents.join("nota.txt"), b"vm").unwrap();
+        std::fs::write(
+            container.join(".com.apple.containermanagerd.metadata.plist"),
+            vec![0; 30_000],
+        )
+        .unwrap();
+
+        let steps = disposal_plan(&home, &container).unwrap();
+        assert!(steps.iter().all(|step| {
+            let path = match step {
+                Disposal::Trash(path) | Disposal::Unlink(path) | Disposal::RemoveEmpty(path) => path,
+            };
+            !container_metadata(path)
+        }));
+        assert!(steps.iter().any(|step| matches!(
+            step,
+            Disposal::Trash(path) if path.ends_with("Data") || path.ends_with("Data/Documents")
+        )));
+        assert!(!steps.iter().any(|step| matches!(step, Disposal::Trash(path) if path == &container)));
+
+        let _ = std::fs::remove_dir_all(&home);
     }
 }

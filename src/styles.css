@@ -273,6 +273,12 @@ h1 {
 }
 
 .pane-head p { margin: 4px 0 0; color: var(--muted); font-size: 13.5px; max-width: 560px; }
+.pane-head .picked {
+  color: var(--fg);
+  font-weight: 620;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
 
 .search {
   width: 220px;
@@ -415,6 +421,13 @@ h1 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.done-note {
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .banner {

@@ -70,6 +70,7 @@ pub struct CleanReport {
     pub bytes: u64,
     pub failures: Vec<CleanFailure>,
     pub emptied_trash: bool,
+    pub notes: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
