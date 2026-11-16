@@ -1,5 +1,6 @@
 use gpui::{
-    App, AppContext as _, Bounds, TitlebarOptions, WindowBounds, WindowOptions, px, size,
+    App, AppContext as _, Bounds, TitlebarOptions, WindowBackgroundAppearance, WindowBounds,
+    WindowOptions, px, size,
 };
 use gpui_platform::application;
 
@@ -11,9 +12,11 @@ fn main() {
                 window_bounds: Some(WindowBounds::Windowed(bounds)),
                 titlebar: Some(TitlebarOptions {
                     title: Some("Cristal".into()),
+                    appears_transparent: true,
                     ..Default::default()
                 }),
                 window_min_size: Some(size(px(920.), px(640.))),
+                window_background: WindowBackgroundAppearance::Transparent,
                 ..Default::default()
             },
             |window, cx| {

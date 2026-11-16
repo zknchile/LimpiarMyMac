@@ -4,7 +4,7 @@ Limpieza clara para tu Mac. Cristal analiza la carpeta de tu usuario, te muestra
 
 La ventana es GPUI, sin vidrio, según [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). No usa `NSGlassEffectView` y no cumple [REQ-0003](docs/requirements/baseline.md). `cargo run` dentro de `src-tauri` abre esa ventana.
 
-La 0.2.0 para Apple Silicon está en [v0.2.0](https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.0). El disco no está firmado con un certificado de Apple ni notarizado. No hay binario para Mac Intel.
+La 0.2.1 para Apple Silicon está en [v0.2.1](https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.1). El disco no está firmado con un certificado de Apple ni notarizado. No hay binario para Mac Intel.
 
 ## Qué limpia
 
@@ -58,7 +58,7 @@ cargo build --release
 ../scripts/package_macos.sh
 ```
 
-El ejecutable queda en `src-tauri/target/release/cristal`. El script arma `Cristal.app` y el `.dmg` de [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md). Esa release no está firmada con un certificado de Apple.
+El ejecutable queda en `src-tauri/target/release/cristal`. El script arma `Cristal.app` y el `.dmg` de la versión del crate. La 0.2.1 es [PLAN-0020](docs/plans/PLAN-0020-publicar-0.2.1.md). Esa release no está firmada con un certificado de Apple.
 
 ## Documentación
 
@@ -66,67 +66,67 @@ El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arq
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
 - [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md), [pruebas](docs/testing/TEST-CASES.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md) y se actualizó al cerrar [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). La ventana es GPUI. No aplica Liquid Glass y no cumple [REQ-0003](docs/requirements/baseline.md). La 0.2.0 se publicó según [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). El primer diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md). Se actualizó al cerrar [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md) y quedó en un solo binario según [PLAN-0014](docs/plans/PLAN-0014-diagrama-de-la-ventana-gpui.md). La ventana es GPUI. No aplica Liquid Glass y no cumple [REQ-0003](docs/requirements/baseline.md). La 0.2.0 se publicó según [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md). La 0.2.1 se publicó según [PLAN-0020](docs/plans/PLAN-0020-publicar-0.2.1.md). Los colores son la paleta de día lluvioso según [PLAN-0017](docs/plans/PLAN-0017-paleta-dia-lluvioso.md). El velo no cumple REQ-0003. Los botones tienen sombra según [PLAN-0018](docs/plans/PLAN-0018-profundidad-de-botones.md). Esa sombra tampoco cumple REQ-0003. La franja del menú es un poco más oscura según [PLAN-0019](docs/plans/PLAN-0019-franja-del-menu.md). Tampoco cumple REQ-0003.
 
 ## Cómo está armada
 
-La ventana y el análisis viven en el mismo proceso. No hay servicio HTTP ni HTML. El detalle está en [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md).
+Todo corre en un solo binario. No hay HTML, ni WebKit, ni comandos `invoke`, ni servicio HTTP. La ventana y el análisis no son dos procesos. El detalle está en [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md).
 
 ```mermaid
-flowchart LR
-  subgraph ui [Ventana GPUI]
+flowchart TB
+  subgraph binario [Un solo binario]
+    main["main.rs<br/>abre la ventana"]
     view["view.rs<br/>pantallas"]
     selection["selection.rs<br/>tamaño marcado"]
     place["place.rs<br/>sitio de la grilla"]
-  end
-
-  subgraph state [Mismo proceso]
     session["lib.rs<br/>último informe"]
-  end
-
-  subgraph core [Rust]
-    scanmod[scan]
-    appsmod[apps]
-    sizemod[size]
-    safemod[safety]
-    cleanmod[clean]
-    modelmod[model]
+    scan["scan.rs"]
+    clean["clean.rs"]
+    apps["apps.rs"]
+    size["size.rs"]
+    safety["safety.rs"]
+    model["model.rs"]
   end
 
   subgraph host [macOS]
+    metal[Metal]
     disk[carpeta del usuario]
     trash[Papelera]
+    finder[Finder]
   end
 
+  main --> view
   view --> selection
   view --> place
   view --> session
-  view --> scanmod
-  view --> cleanmod
-  scanmod --> appsmod
-  scanmod --> sizemod
-  scanmod --> safemod
-  cleanmod --> safemod
-  scanmod --> modelmod
-  cleanmod --> modelmod
-  scanmod --> disk
-  cleanmod --> trash
+  view -->|fuera del hilo de pintado| scan
+  view -->|fuera del hilo de pintado| clean
+  view -->|pinta con GPUI| metal
+  view -->|open| finder
+  scan --> apps
+  scan --> size
+  scan --> safety
+  scan --> model
+  scan --> disk
+  clean --> safety
+  clean --> model
+  clean --> trash
 ```
 
 | Pieza | Qué hace |
 | --- | --- |
-| `src-tauri/src/main.rs` | Abre la ventana GPUI titulada Cristal. |
-| `src-tauri/src/view.rs` | Pinta las pantallas, pide confirmación y cierra con Salir. |
+| `src-tauri/src/main.rs` | Arranca GPUI y abre la ventana titulada Cristal. Si se cierra, termina el proceso. |
+| `src-tauri/src/view.rs` | Pinta las pantallas, pide confirmación y cierra con Salir. El análisis y la limpieza no corren en el hilo de pintado. |
 | `src-tauri/src/selection.rs` | Cuenta cuánto hay marcado. No decide si una ruta se puede borrar. |
 | `src-tauri/src/place.rs` | Decide si, al redibujar, la grilla se queda donde estaba. |
-| `src-tauri/src/lib.rs` | Guarda el último informe y la tarea en curso. Muestra un archivo o abre la Papelera. |
-| `scan.rs` | Recorre la carpeta del usuario y propone elementos. |
-| `apps.rs` | Lee qué apps están instaladas, para no tratar sus datos como restos. |
-| `size.rs` | Mide el peso y la antigüedad. |
-| `safety.rs` | Lista blanca. Rechaza lo que está fuera, aunque la interfaz lo pida. |
-| `clean.rs` | Mueve a la Papelera solo identificadores del último análisis. |
-| `model.rs` | Forma del informe que cruza la ventana y el análisis. |
+| `src-tauri/src/lib.rs` | Guarda el último informe y la tarea en curso. Muestra un archivo o abre la Papelera con `open`. |
+| `src-tauri/src/scan.rs` | Recorre la carpeta del usuario y propone elementos. |
+| `src-tauri/src/apps.rs` | Lee qué apps están instaladas, para no tratar sus datos como restos. |
+| `src-tauri/src/size.rs` | Mide el peso y la antigüedad. |
+| `src-tauri/src/safety.rs` | Lista blanca. Rechaza lo que está fuera, aunque la interfaz lo pida. |
+| `src-tauri/src/clean.rs` | Mueve a la Papelera solo identificadores del último análisis. |
+| `src-tauri/src/model.rs` | Forma del informe que cruza la ventana y el análisis. |
 
-La ventana no aplica Liquid Glass. El material nativo de Apple no está en esta prueba.
+GPUI pinta con Metal. Eso no es Liquid Glass: la ventana no usa `NSGlassEffectView` y no cumple [REQ-0003](docs/requirements/baseline.md).
 
 La limpieza y el análisis usan las mismas reglas. Un archivo solo se puede mover si estaba en el último análisis y vive en una carpeta permitida.

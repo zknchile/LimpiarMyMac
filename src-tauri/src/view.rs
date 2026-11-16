@@ -1,11 +1,11 @@
-//! Pantallas en texto plano. No hay vidrio ni HTML.
+//! Pantallas en texto plano. Paleta de día lluvioso, con un velo. Los botones llevan sombra. No hay vidrio ni HTML.
 
 use std::collections::HashSet;
 
 use futures::StreamExt;
 use gpui::{
     App, ClickEvent, Context, IntoElement, ParentElement, Render, ScrollHandle, Styled, Window,
-    div, point, prelude::*, px, rgb,
+    div, point, prelude::*, px, rgb, rgba,
 };
 
 use crate::model::{CleanItem, CleanKind, CleanProgress, CleanReport, Risk, ScanProgress, ScanReport};
@@ -14,6 +14,23 @@ use crate::selection::{self, SelectionSummary};
 use crate::Session;
 
 const SUMMARY: &str = "summary";
+
+/// Nube `#e2e8f0`. Fondo.
+const CLOUD: u32 = 0xe2e8f0;
+/// La misma nube al 88 %. Un velo, no vidrio.
+const VEIL: u32 = 0xe2e8f0e0;
+/// Tinta `#0f172a`. Títulos y botón principal.
+const INK: u32 = 0x0f172a;
+/// Pizarra `#1e293b`. Texto.
+const SLATE: u32 = 0x1e293b;
+/// Ceniza `#475569`. Texto secundario y borde.
+const ASH: u32 = 0x475569;
+/// Pelo `#94a3b8`. Línea. No es texto: sobre la nube queda en 2.08:1.
+const HAIR: u32 = 0x94a3b8;
+/// Franja del menú. Nube al 80 % y pelo al 20 %: `#d2dae5`. Un poco más oscura que el velo.
+const CAP: u32 = 0xd2dae5e0;
+/// Alto medido de esa franja en esta Mac, el 2026-11-16.
+const CAP_HEIGHT: f32 = 32.;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Screen {
@@ -305,14 +322,30 @@ impl Render for Cristal {
             .flex()
             .flex_col()
             .size_full()
-            .bg(rgb(0xf6f5f2))
-            .text_color(rgb(0x1c1c1c))
+            .bg(rgba(VEIL))
+            .text_color(rgb(SLATE))
+            .child(self.cap())
             .child(div().flex_1().overflow_hidden().child(body))
             .child(self.dock(cx))
     }
 }
 
 impl Cristal {
+    fn cap(&self) -> impl IntoElement {
+        div()
+            .h(px(CAP_HEIGHT))
+            .w_full()
+            .flex_none()
+            .flex()
+            .items_center()
+            .justify_center()
+            .bg(rgba(CAP))
+            .text_color(rgb(INK))
+            .text_size(px(13.))
+            .font_weight(gpui::FontWeight::SEMIBOLD)
+            .child("Cristal")
+    }
+
     fn dock(&mut self, cx: &mut Context<Self>) -> impl IntoElement {
         let busy = self.session.is_busy();
         let label = if self.session.has_report() {
@@ -328,10 +361,11 @@ impl Cristal {
             .flex_none()
             .justify_end()
             .items_center()
-            .gap_2()
-            .p_3()
+            .gap_3()
+            .p_4()
             .border_t_1()
-            .border_color(rgb(0xe4e2dc))
+            .border_color(rgb(HAIR))
+            .bg(rgba(VEIL))
             .child(button("analyze", label, !busy, true, scan))
             .child(button("quit", "Salir", true, false, |_, _, cx| cx.quit()))
     }
@@ -340,9 +374,9 @@ impl Cristal {
         div()
             .flex()
             .flex_col()
-            .gap_2()
-            .p_8()
-            .child("Cristal")
+            .gap_4()
+            .p_12()
+            .child(heading("Cristal"))
             .child("Encuentra cachés, restos de apps borradas y basura de los navegadores. Tú decides qué se mueve a la Papelera.")
             .child("Primero analiza. Tú eliges. Va a la Papelera.")
             .when(!self.error.is_empty(), |this| this.child(self.error.clone()))
@@ -359,9 +393,9 @@ impl Cristal {
         div()
             .flex()
             .flex_col()
-            .gap_2()
-            .p_8()
-            .child(progress.stage)
+            .gap_4()
+            .p_12()
+            .child(heading(progress.stage))
             .child(progress.detail)
             .child(format!(
                 "{} encontrados · paso {} de {}",
@@ -381,9 +415,9 @@ impl Cristal {
         div()
             .flex()
             .flex_col()
-            .gap_2()
-            .p_8()
-            .child("Moviendo a la Papelera")
+            .gap_4()
+            .p_12()
+            .child(heading("Moviendo a la Papelera"))
             .child(progress.name)
             .child(format!("{} de {}", progress.done, progress.total))
     }
@@ -405,9 +439,9 @@ impl Cristal {
         let mut column = div()
             .flex()
             .flex_col()
-            .gap_2()
-            .p_8()
-            .child("Listo")
+            .gap_4()
+            .p_12()
+            .child(heading("Listo"))
             .child(format!(
                 "{} elementos · {}. {}",
                 result.moved,
@@ -434,7 +468,7 @@ impl Cristal {
 
     fn results_view(&mut self, cx: &mut Context<Self>) -> impl IntoElement {
         let Some(report) = self.session.report() else {
-            return div().p_8().child("No hay informe.").into_any_element();
+            return div().p_12().child("No hay informe.").into_any_element();
         };
         let selected = self.summary_of(&self.items());
         let nav = self.nav(&report, cx);
@@ -478,9 +512,10 @@ impl Cristal {
                             .flex_none()
                             .justify_between()
                             .items_center()
-                            .p_3()
+                            .p_4()
                             .border_t_1()
-                            .border_color(rgb(0xe4e2dc))
+                            .border_color(rgb(HAIR))
+                            .bg(rgba(VEIL))
                             .child(format!(
                                 "{} · {} seleccionados",
                                 selection::format_bytes(selected.bytes),
@@ -538,9 +573,14 @@ impl Cristal {
             .p_2()
             .rounded_md()
             .cursor_pointer()
-            .bg(if active { rgb(0xe7e5de) } else { rgb(0xf6f5f2) })
+            .bg(if active { rgb(SLATE) } else { rgba(VEIL) })
+            .text_color(if active { rgb(CLOUD) } else { rgb(SLATE) })
             .child(title.to_string())
-            .child(meta.to_string())
+            .child(
+                div()
+                    .text_color(if active { rgb(CLOUD) } else { rgb(ASH) })
+                    .child(meta.to_string()),
+            )
             .on_click(open)
             .into_any_element()
     }
@@ -563,7 +603,7 @@ impl Cristal {
                     .p_2()
                     .cursor_pointer()
                     .border_b_1()
-                    .border_color(rgb(0xe4e2dc))
+                    .border_color(rgb(HAIR))
                     .child(category.title.clone())
                     .child(format!(
                         "{} de {} seleccionados",
@@ -714,7 +754,7 @@ impl Cristal {
             .w_full()
             .p_2()
             .border_b_1()
-            .border_color(rgb(0xe4e2dc))
+            .border_color(rgb(HAIR))
             .flex()
             .gap_2()
             .child(
@@ -730,8 +770,8 @@ impl Cristal {
                     .flex_col()
                     .flex_1()
                     .child(item.name.clone())
-                    .child(item.reason.clone())
-                    .child(format!(
+                    .child(note(item.reason.clone()))
+                    .child(note(format!(
                         "{}{}{}",
                         item.display_path,
                         extra,
@@ -740,11 +780,11 @@ impl Cristal {
                         } else {
                             format!(" · {when}")
                         }
-                    ))
+                    )))
                     .children(reveal),
             )
-            .child(risk_label(item.risk))
-            .child(selection::format_bytes(item.bytes))
+            .child(note(risk_label(item.risk)))
+            .child(note(selection::format_bytes(item.bytes)))
             .into_any_element()
     }
 
@@ -794,13 +834,13 @@ impl Cristal {
         let mut column = div()
             .flex()
             .flex_col()
-            .gap_2()
-            .p_8()
-            .child(if empties {
+            .gap_4()
+            .p_12()
+            .child(heading(if empties {
                 "Esto incluye vaciar la Papelera"
             } else {
                 "Mover a la Papelera"
-            })
+            }))
             .child(format!(
                 "{} elementos · {}. {}",
                 picked.len(),
@@ -852,34 +892,78 @@ fn button(
     primary: bool,
     on_click: impl Fn(&ClickEvent, &mut Window, &mut App) + 'static,
 ) -> gpui::AnyElement {
-    let bg = if !enabled {
-        rgb(0xd6d3cb)
+    let bg = if primary && enabled {
+        rgb(INK)
+    } else {
+        rgba(VEIL)
+    };
+    let color = if !enabled {
+        rgb(ASH)
     } else if primary {
-        rgb(0x1d4ed8)
+        rgb(CLOUD)
     } else {
-        rgb(0xffffff)
+        rgb(SLATE)
     };
-    let color = if enabled && primary {
-        rgb(0xffffff)
-    } else {
-        rgb(0x1c1c1c)
-    };
+    let edge = if primary && enabled { rgb(INK) } else { rgb(ASH) };
     let mut button = div()
         .id(id)
-        .px_3()
-        .py_2()
+        .px_4()
+        .py_2p5()
         .rounded_md()
         .border_1()
-        .border_color(rgb(0xd6d3cb))
+        .border_color(edge)
         .bg(bg)
         .text_color(color)
         .child(label.to_string());
     if enabled {
-        button = button.cursor_pointer().on_click(on_click);
+        button = button
+            .shadow(button_shadow(primary, false))
+            .cursor_pointer()
+            .on_click(on_click)
+            .hover(move |style| style.shadow(button_shadow(primary, true)))
+            .active(|style| style.shadow(pressed_shadow()));
     } else {
         button = button.opacity(0.55);
     }
     button.into_any_element()
+}
+
+/// Tinta o nube con alfa. No es un sexto color.
+fn tone(hex: u32, alpha: u8) -> gpui::Hsla {
+    rgba((hex << 8) | u32::from(alpha)).into()
+}
+
+fn button_shadow(primary: bool, lifted: bool) -> Vec<gpui::BoxShadow> {
+    let ink = tone(
+        INK,
+        if primary {
+            if lifted { 92 } else { 82 }
+        } else if lifted {
+            56
+        } else {
+            46
+        },
+    );
+    if primary {
+        vec![
+            gpui::BoxShadow::new(px(0.), px(if lifted { 5. } else { 3. }), ink)
+                .blur_radius(px(if lifted { 12. } else { 8. })),
+            gpui::BoxShadow::new(px(0.), px(1.), tone(CLOUD, 56)).inset(),
+        ]
+    } else {
+        vec![gpui::BoxShadow::new(
+            px(0.),
+            px(if lifted { 2. } else { 1. }),
+            ink,
+        )
+        .blur_radius(px(if lifted { 6. } else { 4. }))]
+    }
+}
+
+fn pressed_shadow() -> Vec<gpui::BoxShadow> {
+    vec![gpui::BoxShadow::new(px(0.), px(2.), tone(INK, 51))
+        .blur_radius(px(4.))
+        .inset()]
 }
 
 fn screen_name(screen: Screen) -> &'static str {
@@ -894,6 +978,21 @@ fn screen_name(screen: Screen) -> &'static str {
 
 fn scroll_top(handle: &ScrollHandle) -> f64 {
     -f64::from(handle.offset().y.as_f32())
+}
+
+fn heading(text: impl Into<String>) -> gpui::AnyElement {
+    div()
+        .text_color(rgb(INK))
+        .font_weight(gpui::FontWeight::SEMIBOLD)
+        .child(text.into())
+        .into_any_element()
+}
+
+fn note(text: impl Into<String>) -> gpui::AnyElement {
+    div()
+        .text_color(rgb(ASH))
+        .child(text.into())
+        .into_any_element()
 }
 
 fn risk_label(risk: Risk) -> &'static str {

@@ -2,6 +2,13 @@
 
 ## 2026-11-16
 
+- Se publicó Cristal 0.2.1 para Apple Silicon. Conserva la ventana GPUI y aplica la paleta de día lluvioso, la sombra de los botones y la franja del menú. No aplica Liquid Glass. El disco no está firmado con un certificado de Apple ni notarizado. [PLAN-0020](docs/plans/PLAN-0020-publicar-0.2.1.md).
+- La franja del menú es `#D2DAE5` al 88 %, un poco más oscura que el velo. No es vidrio y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0019](docs/plans/PLAN-0019-franja-del-menu.md).
+- Los botones habilitados llevan sombra de tinta. Es `BoxShadow` de GPUI, no vidrio, y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0018](docs/plans/PLAN-0018-profundidad-de-botones.md).
+- La ventana usa la paleta de día lluvioso, con el fondo `#E2E8F0` al 88 %. La transparencia es el alfa de GPUI, no vidrio, y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0017](docs/plans/PLAN-0017-paleta-dia-lluvioso.md).
+- La ventana usa la paleta Ocean Glass: fondo `#ECFEFF`, texto `#083344`, sello `#22D3EE`. El nombre no es vidrio y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0016](docs/plans/PLAN-0016-paleta-ocean-glass.md).
+- La ventana GPUI usa una paleta cálida y poco saturada. El botón principal deja el azul `#1d4ed8`. No es vidrio y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0015](docs/plans/PLAN-0015-colores-mas-suaves.md).
+- El README describe la arquitectura como un solo binario GPUI. No hay HTML ni comandos de Tauri. El análisis y la limpieza quedan fuera del hilo de pintado. [PLAN-0014](docs/plans/PLAN-0014-diagrama-de-la-ventana-gpui.md).
 - Se publicó Cristal 0.2.0 para Apple Silicon. La ventana es GPUI y no aplica Liquid Glass. El disco no está firmado con un certificado de Apple ni notarizado. [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md).
 - La ventana que abre `cargo run` pasó a GPUI. Se quitó la vista WebKit. No se aplica `NSGlassEffectView` y no se cumple [REQ-0003](docs/requirements/baseline.md). [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md) pasó a `Accepted`. [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md) quedó `Superseded by ADR-0003`. [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). Esa migración no subió la versión; la publicación es el plan siguiente.
 
