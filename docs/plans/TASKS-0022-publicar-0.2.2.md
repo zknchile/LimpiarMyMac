@@ -11,7 +11,7 @@
 | --- | --- | --- | --- | --- |
 | TASK-0022-01 | Dejar el plan | Ninguna | Agente principal | completada |
 | TASK-0022-02 | Alinear versión y documentación | TASK-0022-01 | Agente principal | completada |
-| TASK-0022-03 | Empaquetar y publicar | TASK-0022-02 | Agente principal | pendiente |
+| TASK-0022-03 | Empaquetar y publicar | TASK-0022-02 | Agente principal | completada |
 
 ## TASK-0022-01 — Dejar el plan
 
@@ -44,4 +44,4 @@
 - **Aceptación y validación:** CoreGraphics lista la ventana del `.app` como `title=Cristal`. El `AppIcon.icns` del disco es el cristal plano, no la gota de Tauri. Tras `kAEQuitApplication` no queda un proceso `cristal` de esa app. La release apunta al commit empujado. Las notas incluyen el SHA-256 del `.dmg`.
 - **Responsable y estado:** según listado.
 - **Paralelismo, límites y entrega:** cierre. Entrega a la persona usuaria.
-- **Resultado y evidencia:** pendiente.
+- **Resultado y evidencia:** el 2026-11-16, `cargo test --lib` pasó 14 pruebas y 0 fallos. No cambió aserciones, así que no hay ficha nueva. `cargo build --release` produjo un binario arm64. El `.app` del `.dmg` dice versión 0.2.2 e identificador `com.limpiarmymac.cristal`. El `AppIcon.icns` tiene la misma suma que `src-tauri/icons/icon.icns` y un pixel de la esquina en 15,23,42. Abrió una ventana que CoreGraphics listó como `title=Cristal`, 1080×741, en `488,287`. `kAEQuitApplication` cerró ese proceso y no quedó `cristal`. `c8709ea` quedó en `origin/main`. La release https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.2 apunta a ese commit y adjunta el `.dmg` y las sumas. SHA-256: `70da17965169d3b434c39ea00c673bd4bf77b64c64baf6d01a3c827a6dd4cd97`. Este cierre es el commit siguiente.

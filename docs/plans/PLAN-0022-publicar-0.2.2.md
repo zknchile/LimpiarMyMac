@@ -1,7 +1,7 @@
 # PLAN-0022 — Publicar Cristal 0.2.2
 
 - **Fecha:** 2026-11-16
-- **Estado:** abierto
+- **Estado:** completado
 - **Solicitud:** actualizar la documentación, subir los cambios a GitHub y publicar un nuevo release.
 - **Tareas:** [TASKS-0022](TASKS-0022-publicar-0.2.2.md)
 
@@ -60,3 +60,7 @@ Supuesto: la persona quiere el mismo tipo de artefacto que la 0.2.1, no solo el 
 ## Entrega, documentación, decisiones y recuperación
 
 Changelog, README, `AGENTS.md` y el estado de REQ-0003. Sin ADR nuevo y sin RD. Recuperación: borrar la release y el tag, y revertir el commit de la versión. El `.dmg` no se versiona.
+
+## Seguimiento y resultados
+
+Completado el 2026-11-16. `cargo test --lib` pasó 14 pruebas y 0 fallos. El `.app` del disco, versión 0.2.2 e identificador `com.limpiarmymac.cristal`, abrió una ventana que CoreGraphics listó como `title=Cristal`. El `AppIcon.icns` coincide con el cristal plano: esquina 15,23,42 y faceta alta 226,232,240. `kAEQuitApplication` cerró ese proceso y no quedó `cristal`. La release es https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.2, sobre `c8709ea`. El SHA-256 del `.dmg` es `70da17965169d3b434c39ea00c673bd4bf77b64c64baf6d01a3c827a6dd4cd97`. No está firmada con un certificado de Apple ni notarizada. No hay binario Intel. REQ-0003 no se reescribió como cumplido.
