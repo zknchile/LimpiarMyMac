@@ -24,6 +24,10 @@ Desde [PLAN-0017](../plans/PLAN-0017-paleta-dia-lluvioso.md) la paleta es la de 
 
 `main.rs` pide `WindowBackgroundAppearance::Transparent`. Eso deja ver un poco lo de detrás. No es `NSVisualEffectView` ni el vidrio de Apple. `#94A3B8` sobre el fondo es 2.08:1, así que no se usa como texto. Salir no se movió.
 
+## Icono
+
+Desde [PLAN-0021](../plans/PLAN-0021-icono-de-cristal.md) el Dock y el `.app` usan un cristal plano. El fondo es `#0F172A`. Las facetas son `#E2E8F0`, `#D2DAE5` y `#94A3B8`. No hay brillo ni sombra. No es la gota de Tauri, no es `NSGlassEffectView` y no cumple [REQ-0003](../requirements/baseline.md). `cargo run` lo asigna con `setApplicationIconImage`, porque el binario suelto no lee `CFBundleIconFile`. El `.app` copia `src-tauri/icons/icon.icns`.
+
 Desde [PLAN-0019](../plans/PLAN-0019-franja-del-menu.md) la franja del menú, de 32 pt, es `#D2DAE5` al 88 %. Sale de la nube y del pelo, no de un sexto acento. El título lo pinta la vista porque GPUI oculta el del sistema al pedir la barra transparente. No es vidrio.
 
 ## Botones

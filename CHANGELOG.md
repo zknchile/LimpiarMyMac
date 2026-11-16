@@ -2,6 +2,8 @@
 
 ## 2026-11-16
 
+- Se publicó Cristal 0.2.2 para Apple Silicon. Conserva la ventana GPUI y sustituye la gota de Tauri por el cristal plano. No aplica Liquid Glass. El disco no está firmado con un certificado de Apple ni notarizado. [PLAN-0022](docs/plans/PLAN-0022-publicar-0.2.2.md).
+- El Dock y el `.app` muestran un cristal plano de la paleta de día lluvioso. No es la gota de Tauri ni es vidrio, y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0021](docs/plans/PLAN-0021-icono-de-cristal.md).
 - Se publicó Cristal 0.2.1 para Apple Silicon. Conserva la ventana GPUI y aplica la paleta de día lluvioso, la sombra de los botones y la franja del menú. No aplica Liquid Glass. El disco no está firmado con un certificado de Apple ni notarizado. [PLAN-0020](docs/plans/PLAN-0020-publicar-0.2.1.md).
 - La franja del menú es `#D2DAE5` al 88 %, un poco más oscura que el velo. No es vidrio y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0019](docs/plans/PLAN-0019-franja-del-menu.md).
 - Los botones habilitados llevan sombra de tinta. Es `BoxShadow` de GPUI, no vidrio, y no cumple [REQ-0003](docs/requirements/baseline.md). [PLAN-0018](docs/plans/PLAN-0018-profundidad-de-botones.md).

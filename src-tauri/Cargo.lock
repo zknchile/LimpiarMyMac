@@ -1024,12 +1024,15 @@ dependencies = [
 
 [[package]]
 name = "cristal"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "dirs",
  "futures",
  "gpui-platform-gpui-unofficial",
  "gpui-unofficial",
+ "objc2 0.6.5",
+ "objc2-app-kit 0.3.2",
+ "objc2-foundation 0.3.2",
  "plist",
  "rayon",
  "serde",
