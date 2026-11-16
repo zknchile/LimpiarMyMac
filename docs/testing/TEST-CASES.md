@@ -32,7 +32,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | `is_deletable` acepta `/Users/test/Library/Caches/Google`. Rechaza `Documents/nota.txt`, `Library/Keychains/login.keychain-db`, `/Users/test` y `/Users/test/Library/Caches`. |
 | Reproducción | En el host, no en Docker ([ADR-0001](../decisions/ADR-0001-app-escritorio-tauri.md)): `cargo test --lib safety::tests::allows_cache_child_and_rejects_documents -- --exact` desde `src-tauri`. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-safety-002
 
@@ -45,7 +45,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | Rechaza `Library/Caches/../Documents/secreto`. Acepta `Downloads/Instalador.dmg`. Rechaza `Downloads/vacaciones.zip` y `Downloads/Carpeta/app.dmg`. |
 | Reproducción | `cargo test --lib safety::tests::rejects_parent_escape_and_allows_installer -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-safety-003
 
@@ -58,7 +58,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | `is_apple_private` es verdadero para `Library/Containers/com.apple.mail` y falso para `Library/Caches/com.apple.Safari`. `protected_support_name` acepta `MobileSync` y `com.apple.spotlight`, y rechaza `Slack`. |
 | Reproducción | `cargo test --lib safety::tests::apple_support_is_private_but_apple_cache_is_not -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-safety-004
 
@@ -71,7 +71,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | `disposal_plan` incluye `Trash` de `Data/Documents` y `Unlink` de `Data/Desktop`. Ningún paso apunta al Escritorio de fuera. El contenedor entero no va a la Papelera. |
 | Reproducción | `cargo test --lib safety::tests::container_plan_trashes_real_files_and_unlinks_escaping_links -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-safety-005
 
@@ -84,7 +84,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | No es privado `Containers/com.utmapp.QEMUHelper/Data/Library/Preferences/com.apple.security.plist`. Sí lo son `Library/Preferences/com.apple.security.plist`, `Library/Preferences/ByHost/com.apple.finder.plist` y `Containers/com.apple.mail/Data/Library`. |
 | Reproducción | `cargo test --lib safety::tests::nested_apple_file_in_third_party_container_is_not_private -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-safety-006
 
@@ -97,7 +97,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | Ningún paso de `disposal_plan` apunta a ese plist. Algún paso tira `Data` o `Data/Documents`. El contenedor entero no va a la Papelera. |
 | Reproducción | `cargo test --lib safety::tests::container_plan_skips_containermanager_metadata -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-apps-001
 
@@ -110,7 +110,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | `owns_exact` acepta `Code`, `zoom.us` y `codex`. `is_vendor_prefix` acepta `Microsoft` y `Google`, y rechaza `go` por ser más corto que tres caracteres. `owns_identifier` acepta `com.google.Chrome.helper` y `com.apple.mail` —este último porque todo `com.apple.` se trata como presente, no porque Mail esté en el ejemplo— y rechaza `com.abandoned.editor`. |
 | Reproducción | `cargo test --lib apps::tests::matches_apps_and_cli_tools -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-size-001
 
@@ -123,7 +123,7 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | Acción y resultado esperado | `path_size` del directorio es 100. |
 | Reproducción | `cargo test --lib size::tests::path_size_ignores_container_metadata -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-selection-001
 
@@ -131,12 +131,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-selection-001. Una selección vacía no hereda el total encontrado. Componente `selection`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | [REQ-0002](../requirements/baseline.md), presentado en la barra. Corregido en [PLAN-0003](../plans/PLAN-0003-actualizar-tamano-seleccion.md) y [TASK-0003-02](../plans/TASKS-0003-actualizar-tamano-seleccion.md#task-0003-02--mostrar-el-tamaño-seleccionado). |
-| Implementación | `src/selection.test.js`, nombre `una selección vacía no hereda el total encontrado`. Llama a `selectionOf` y `formatBytes` de `src/selection.js`. |
-| Preparación | Dos elementos sintéticos, 2 GiB y 400 MiB. Conjunto de IDs vacío. Sin DOM ni Tauri. |
-| Acción y resultado esperado | `count` 0, `bytes` 0, `total` igual a la suma de ambos, y `formatBytes(0)` es `0 B`. |
-| Reproducción | En la raíz, en el host: `node --test --test-name-pattern "una selección vacía no hereda el total encontrado" src/selection.test.js`. |
+| Implementación | `src-tauri/src/selection.rs`, `selection::tests::empty_selection_does_not_inherit_total`. Trasladada en [PLAN-0012](../plans/PLAN-0012-migrar-vista-a-gpui.md). |
+| Preparación | Dos elementos sintéticos, 2 GiB y 400 MiB. Conjunto de IDs vacío. Sin ventana. |
+| Acción y resultado esperado | `count` 0, `bytes` 0, `total` igual a la suma de ambos, y `format_bytes(0)` es `0 B`. |
+| Reproducción | `cargo test --lib selection::tests::empty_selection_does_not_inherit_total -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). La de Node está en [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
 
 ## TEST-selection-002
 
@@ -144,12 +144,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-selection-002. Marcar y desmarcar cambia el tamaño seleccionado. Componente `selection`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | Mismo defecto de presentación que TEST-selection-001. |
-| Implementación | `src/selection.test.js`, nombre `marcar y desmarcar cambia el tamaño seleccionado`. |
-| Preparación | Elementos de 2 GiB y 80 MiB. Sin DOM. |
+| Implementación | `src-tauri/src/selection.rs`, `selection::tests::toggling_changes_selected_size`. |
+| Preparación | Elementos de 2 GiB y 80 MiB. Sin ventana. |
 | Acción y resultado esperado | Con solo el primero, `bytes` es 2 GiB. Con ambos, es 2 GiB + 80 MiB. Los textos formateados no coinciden. |
-| Reproducción | `node --test --test-name-pattern "marcar y desmarcar cambia el tamaño seleccionado" src/selection.test.js` en la raíz, en el host. |
+| Reproducción | `cargo test --lib selection::tests::toggling_changes_selected_size -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). |
 
 ## TEST-selection-003
 
@@ -157,12 +157,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-selection-003. Restar 80 MiB a un total en GiB cambia el texto y ambos siguen en GB. Componente `selection`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | [PLAN-0003](../plans/PLAN-0003-actualizar-tamano-seleccion.md). No fija el redondeo de un ajuste de 10 MB; eso sigue fuera de esta ficha. |
-| Implementación | `src/selection.test.js`, nombre `ochenta MB sobre un total en GB cambian el texto`. |
-| Preparación | Ninguna. Solo `formatBytes`. |
-| Acción y resultado esperado | `formatBytes(15 GiB)` y `formatBytes(15 GiB − 80 MiB)` son distintos y ambos terminan en `GB`. |
-| Reproducción | `node --test --test-name-pattern "ochenta MB sobre un total en GB cambian el texto" src/selection.test.js` en la raíz, en el host. |
+| Implementación | `src-tauri/src/selection.rs`, `selection::tests::eighty_mb_on_a_gb_total_changes_the_text`. |
+| Preparación | Ninguna. Solo `format_bytes`. |
+| Acción y resultado esperado | `format_bytes(15 GiB)` y `format_bytes(15 GiB − 80 MiB)` son distintos y ambos terminan en `GB`. |
+| Reproducción | `cargo test --lib selection::tests::eighty_mb_on_a_gb_total_changes_the_text -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-01](TEST-RUNS.md#run-2026-10-15-01). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). |
 
 ## TEST-place-001
 
@@ -170,12 +170,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-place-001. Al marcar en la misma categoría, la grilla, la barra y el foco se quedan. Componente `place`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md), [TASK-0010-02](../plans/TASKS-0010-grilla-sin-saltar.md#task-0010-02--conservar-el-desplazamiento). No cambia [REQ-0002](../requirements/baseline.md): solo evita que el redibujo suba la lista. |
-| Implementación | `src/place.test.js`, nombre `la misma categoría conserva la grilla y el foco`. Llama a `placeToKeep` de `src/place.js`. |
-| Preparación | Categoría `caches`, lista en 480, barra en 120, foco en `caches-4`. Sin DOM ni Tauri. |
+| Implementación | `src-tauri/src/place.rs`, `place::tests::same_category_keeps_list_and_focus`. Trasladada en [PLAN-0012](../plans/PLAN-0012-migrar-vista-a-gpui.md). |
+| Preparación | Categoría `caches`, lista en 480, barra en 120, foco en `caches-4`. Sin ventana. |
 | Acción y resultado esperado | Si la pantalla sigue en resultados y la categoría no cambia, se conservan 480, 120 y `caches-4`. |
-| Reproducción | En la raíz, en el host: `node --test --test-name-pattern "la misma categoría conserva la grilla y el foco" src/place.test.js`. |
+| Reproducción | `cargo test --lib place::tests::same_category_keeps_list_and_focus -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). La de Node está en [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
 
 ## TEST-place-002
 
@@ -183,12 +183,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-place-002. Abrir otra categoría no hereda el desplazamiento de la lista anterior. La barra sí se queda. Componente `place`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | Mismo defecto de [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md). |
-| Implementación | `src/place.test.js`, nombre `otra categoría no hereda el desplazamiento de la lista`. |
+| Implementación | `src-tauri/src/place.rs`, `place::tests::another_category_does_not_inherit_list_offset`. |
 | Preparación | El mismo punto de partida que TEST-place-001. La categoría siguiente es `logs`. |
 | Acción y resultado esperado | `list` es nulo y no hay foco que devolver. `sidebar` sigue en 120. |
-| Reproducción | `node --test --test-name-pattern "otra categoría no hereda el desplazamiento de la lista" src/place.test.js` en la raíz, en el host. |
+| Reproducción | `cargo test --lib place::tests::another_category_does_not_inherit_list_offset -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). |
 
 ## TEST-place-003
 
@@ -196,12 +196,12 @@ El responsable de mantenimiento de todos estos casos es el mantenedor del reposi
 | --- | --- |
 | Identificación | TEST-place-003. Salir de resultados no reutiliza el sitio. Abrir la confirmación conserva la lista, pero no devuelve el foco a la casilla. Componente `place`. Unitaria, sin ventana. |
 | Objetivo y trazabilidad | [PLAN-0010](../plans/PLAN-0010-grilla-sin-saltar.md). La hoja no debe perder sus controles. |
-| Implementación | `src/place.test.js`, nombre `salir de resultados o abrir la confirmación no reutiliza el sitio`. |
+| Implementación | `src-tauri/src/place.rs`, `place::tests::leaving_results_or_opening_confirm_does_not_reuse_place`. |
 | Preparación | El mismo punto de partida. Variantes: pantalla `cleaning`, y resultados con `confirm`. |
 | Acción y resultado esperado | Al limpiar, lista, barra y foco quedan vacíos. Con la hoja abierta, la lista sigue en 480 y el foco no vuelve a la casilla. |
-| Reproducción | `node --test --test-name-pattern "salir de resultados o abrir la confirmación no reutiliza el sitio" src/place.test.js` en la raíz, en el host. |
+| Reproducción | `cargo test --lib place::tests::leaving_results_or_opening_confirm_does_not_reuse_place -- --exact` desde `src-tauri`, en el host. |
 | Estado de implementación | Implementada. |
-| Evidencia de ejecución | [RUN-2026-10-15-02](TEST-RUNS.md#run-2026-10-15-02). |
+| Evidencia de ejecución | [RUN-2026-11-16-02](TEST-RUNS.md#run-2026-11-16-02). La ejecución anterior está en [RUN-2026-11-16-01](TEST-RUNS.md#run-2026-11-16-01). |
 
 ## Sin ficha
 

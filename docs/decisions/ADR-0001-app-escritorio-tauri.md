@@ -1,6 +1,6 @@
 # ADR-0001 — App de escritorio con Tauri
 
-- **Status:** Accepted
+- **Status:** Superseded by ADR-0003
 - **Date:** 2026-10-15
 
 ## Context
@@ -13,7 +13,9 @@ Durante la construcción se consideraron interfaces Rust que no abren un materia
 
 ## Decision
 
-Cristal es una app de escritorio local:
+Esta decisión quedó sustituida el 2026-11-16 por [ADR-0003](ADR-0003-vista-gpui.md). La ventana vigente no es Tauri. Sigue valiendo lo que aquel ADR conserva: Rust en el host, sin HTTP y sin Docker.
+
+Lo que se decidió el 2026-10-15, y ya no es la ventana del binario:
 
 - Rust analiza, calcula tamaños y mueve archivos. No hay servicio HTTP ni puerto de red.
 - Tauri 2 muestra la ventana y expone comandos (`scan`, `clean`, `reveal`, `open_trash`, `quit`).

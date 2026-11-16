@@ -2,7 +2,7 @@
 
 Limpieza clara para tu Mac. Cristal analiza la carpeta de tu usuario, te muestra qué se puede liberar y solo mueve a la Papelera lo que confirmas.
 
-La ventana usa Liquid Glass en macOS 26 o posterior.
+La ventana es GPUI, sin vidrio, según [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). No usa `NSGlassEffectView` y no cumple [REQ-0003](docs/requirements/baseline.md). `cargo run` dentro de `src-tauri` abre esa ventana.
 
 ## Qué limpia
 
@@ -26,37 +26,36 @@ Los elementos marcados como **Revisar** pueden incluir documentos. Ábrelos con 
 
 1. Pulsa **Analizar esta Mac**. Todavía no se borra nada.
 2. Revisa la selección. Lo seguro ya viene marcado. El tamaño cambia al marcar o desmarcar; si no queda nada, muestra 0 B. La barra dice cuánto hay seleccionado de lo encontrado, por ejemplo `4.2 GB de 6.1 GB`.
-3. Pulsa **Revisar y limpiar** y confirma.
+3. Pulsa **Revisar y limpiar** y confirma. **Cancelar** vuelve a los resultados y no mueve nada.
 
 **Salir** cierra la app. Está siempre abajo a la derecha, a la derecha de **Analizar**.
 
 ## Requisitos
 
 - macOS
-- [Rust](https://rustup.rs)
-- Node.js 18 o posterior
-
-Liquid Glass se aplica en macOS 26+. En versiones anteriores, la ventana usa el efecto de vibrancy.
+- [Rust](https://rustup.rs) 1.85 o posterior
+- Xcode, porque la ventana usa Metal
 
 ## Ejecutar en desarrollo
 
 ```bash
-npm install
-npm test
-npm run tauri dev
+cd src-tauri
+cargo test --lib
+cargo run
 ```
 
-`npm test` comprueba el tamaño de la selección, sin abrir la ventana. Las reglas de rutas se prueban con `cargo test --lib` dentro de `src-tauri`. Qué cubre cada prueba está en [casos](docs/testing/TEST-CASES.md).
+Si el selector apunta a Command Line Tools, el build usa `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. La primera compilación tarda: baja GPUI y compila Metal.
 
-La primera compilación tarda un poco: Tauri descarga y compila sus dependencias.
+`cargo test --lib` cubre las reglas de rutas, el tamaño de la selección y el sitio de la grilla. No abre la ventana. Qué cubre cada prueba está en [casos](docs/testing/TEST-CASES.md).
 
-## Generar la app
+## Generar el binario
 
 ```bash
-npm run tauri build
+cd src-tauri
+cargo build --release
 ```
 
-El `.app` queda en `src-tauri/target/release/bundle/macos/`.
+El ejecutable queda en `src-tauri/target/release/cristal`. No hay `.app` firmado ni release.
 
 ## Documentación
 
@@ -64,23 +63,22 @@ El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arq
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
 - [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md), [pruebas](docs/testing/TEST-CASES.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md) y se actualizó al cerrar [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). La ventana es GPUI. No aplica Liquid Glass y no cumple [REQ-0003](docs/requirements/baseline.md).
 
 ## Cómo está armada
 
-La ventana y el análisis viven en el mismo proceso. No hay servicio HTTP. El detalle de esa forma está en [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md).
+La ventana y el análisis viven en el mismo proceso. No hay servicio HTTP ni HTML. El detalle está en [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md).
 
 ```mermaid
 flowchart LR
-  subgraph ui [Interfaz]
-    view["main.js<br/>pantallas"]
-    selection["selection.js<br/>tamaño marcado"]
-    place["place.js<br/>sitio de la grilla"]
+  subgraph ui [Ventana GPUI]
+    view["view.rs<br/>pantallas"]
+    selection["selection.rs<br/>tamaño marcado"]
+    place["place.rs<br/>sitio de la grilla"]
   end
 
-  subgraph bridge [Tauri]
-    commands["lib.rs<br/>scan, clean, reveal,<br/>open_trash, quit"]
-    state["último informe"]
+  subgraph state [Mismo proceso]
+    session["lib.rs<br/>último informe"]
   end
 
   subgraph core [Rust]
@@ -95,16 +93,13 @@ flowchart LR
   subgraph host [macOS]
     disk[carpeta del usuario]
     trash[Papelera]
-    glass[Liquid Glass]
   end
 
   view --> selection
   view --> place
-  view -->|"invoke"| commands
-  commands -->|"scan-progress<br/>clean-progress"| view
-  commands --> state
-  commands --> scanmod
-  commands --> cleanmod
+  view --> session
+  view --> scanmod
+  view --> cleanmod
   scanmod --> appsmod
   scanmod --> sizemod
   scanmod --> safemod
@@ -113,22 +108,22 @@ flowchart LR
   cleanmod --> modelmod
   scanmod --> disk
   cleanmod --> trash
-  glass --> commands
 ```
 
 | Pieza | Qué hace |
 | --- | --- |
-| `src/main.js` | Pinta las pantallas y llama a Tauri. Escucha el progreso. |
-| `src/selection.js` | Cuenta cuánto hay marcado. No decide si una ruta se puede borrar. |
-| `src/place.js` | Decide si, al redibujar, la grilla se queda donde estaba. |
-| `src-tauri/src/lib.rs` | Expone los comandos, guarda el último informe y aplica el vidrio de la ventana. |
+| `src-tauri/src/main.rs` | Abre la ventana GPUI titulada Cristal. |
+| `src-tauri/src/view.rs` | Pinta las pantallas, pide confirmación y cierra con Salir. |
+| `src-tauri/src/selection.rs` | Cuenta cuánto hay marcado. No decide si una ruta se puede borrar. |
+| `src-tauri/src/place.rs` | Decide si, al redibujar, la grilla se queda donde estaba. |
+| `src-tauri/src/lib.rs` | Guarda el último informe y la tarea en curso. Muestra un archivo o abre la Papelera. |
 | `scan.rs` | Recorre la carpeta del usuario y propone elementos. |
 | `apps.rs` | Lee qué apps están instaladas, para no tratar sus datos como restos. |
 | `size.rs` | Mide el peso y la antigüedad. |
 | `safety.rs` | Lista blanca. Rechaza lo que está fuera, aunque la interfaz lo pida. |
 | `clean.rs` | Mueve a la Papelera solo identificadores del último análisis. |
-| `model.rs` | Forma del informe que cruza la ventana y Rust. |
+| `model.rs` | Forma del informe que cruza la ventana y el análisis. |
 
-Liquid Glass no es CSS. En macOS 26 o posterior, Tauri lo aplica a la ventana nativa. Si no está disponible, usa vibrancy.
+La ventana no aplica Liquid Glass. El material nativo de Apple no está en esta prueba.
 
 La limpieza y el análisis usan las mismas reglas. Un archivo solo se puede mover si estaba en el último análisis y vive en una carpeta permitida.

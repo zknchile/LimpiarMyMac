@@ -4,10 +4,14 @@ No hay decisiones anteriores al 2026-10-15. El procedimiento de formato y estado
 
 ## Decisiones vigentes
 
-- [ADR-0001 — App de escritorio con Tauri](ADR-0001-app-escritorio-tauri.md) — `Accepted`.
+- [ADR-0003 — Vista en GPUI, sin vidrio nativo](ADR-0003-vista-gpui.md) — `Accepted`. La ventana no usa `NSGlassEffectView` y no cumple REQ-0003.
 - [ADR-0002 — Limpieza con lista blanca y Papelera](ADR-0002-lista-blanca-y-papelera.md) — `Accepted`.
 - [RD-0001 — Salir, README y GitHub](RD-0001-salir-readme-github.md) — `Accepted`.
 - [RD-0002 — Salir abajo a la derecha](RD-0002-salir-abajo-a-la-derecha.md) — `Accepted`.
+
+## Sustituidas
+
+- [ADR-0001 — App de escritorio con Tauri](ADR-0001-app-escritorio-tauri.md) — `Superseded by ADR-0003`. Conserva el motivo de no usar HTTP ni Docker. La ventana de ese ADR ya no es la del binario.
 
 Estados permitidos: `Proposed`, `Accepted`, `Deprecated`, `Superseded` y `Rejected`. Si una decisión sustituye a otra, se conservan ambas y la anterior queda `Superseded by ADR-xxxx`.
 

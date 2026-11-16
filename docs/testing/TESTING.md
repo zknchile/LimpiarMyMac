@@ -10,20 +10,16 @@ No se inventan casos de interfaz, de análisis del disco real ni de restauració
 
 ## Dónde se ejecutan
 
-En el host, no en Docker. Un contenedor no abre la ventana Liquid Glass. La desviación está en [ADR-0001](../decisions/ADR-0001-app-escritorio-tauri.md).
+En el host, no en Docker. Un contenedor no abre la ventana de macOS. La desviación está en [ADR-0003](../decisions/ADR-0003-vista-gpui.md).
 
-Reglas de rutas, inventario y tamaño:
+La suite es una sola:
 
 ```bash
 cd src-tauri
 cargo test --lib
 ```
 
-Presentación de la selección, sin abrir la ventana:
-
-```bash
-npm test
-```
+Cubre la lista blanca, el inventario de apps, el tamaño, la selección y el sitio de la grilla. No abre la ventana. Node no forma parte de los requisitos.
 
 `cargo check` comprueba que el crate compila. No es un caso de comportamiento y no tiene ID.
 
@@ -33,7 +29,7 @@ Las fichas cubren la lista blanca, el plan de un contenedor de prueba, el empare
 
 ## Manual
 
-La persona usuaria abrió la app el 2026-10-15 y dijo que la ventana quedó muy buena. No hay guion ni captura, así que no es un caso del catálogo.
+La persona usuaria abrió la ventana de Tauri el 2026-10-15 y dijo que quedó muy buena. Esa ventana ya no es la del binario. No hay guion ni captura, así que no es un caso del catálogo. El cierre de [PLAN-0012](../plans/PLAN-0012-migrar-vista-a-gpui.md) anota que la ventana GPUI se abrió; eso tampoco es un caso del catálogo.
 
 Pendiente, sin afirmar que se haya hecho: contraste en claro y oscuro, `prefers-reduced-transparency`, y una limpieza real con restauración desde la Papelera.
 

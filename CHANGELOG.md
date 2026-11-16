@@ -1,5 +1,10 @@
 # Evolución del proyecto
 
+## 2026-11-16
+
+- La ventana que abre `cargo run` es GPUI. Se quitó la vista WebKit. No se aplica `NSGlassEffectView` y no se cumple [REQ-0003](docs/requirements/baseline.md). [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md) pasó a `Accepted`. [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md) quedó `Superseded by ADR-0003`. [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). No se subió la versión ni se creó una release.
+- El mismo día había quedado abierto el plan de esa prueba. El binario ya abría la ventana GPUI, y el HTML seguía en el árbol hasta el cierre.
+
 ## 2026-10-15
 
 - El README muestra el diagrama de componentes: interfaz, comandos de Tauri, módulos Rust y macOS. No hay servicio HTTP. [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md).
