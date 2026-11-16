@@ -125,4 +125,4 @@ Completado el 2026-11-16. `cargo run` abrió una ventana titulada Cristal. Un an
 
 Se quitó la vista WebKit. [ADR-0003](../decisions/ADR-0003-vista-gpui.md) pasó a `Accepted`. [ADR-0001](../decisions/ADR-0001-app-escritorio-tauri.md) quedó `Superseded by ADR-0003`. [REQ-0003](../requirements/baseline.md) no se reescribió. La ventana no lo cumple. [RUN-2026-11-16-02](../testing/TEST-RUNS.md#run-2026-11-16-02) aprobó `cargo test --lib`: 14 passed, 0 failed. No se subió la versión ni se creó una release.
 
-Después del corte, `git diff --check` no reportó espacios conflictivos. `cargo run` en `src-tauri` volvió a abrir la ventana: CoreGraphics la listó como `title=Cristal`, 1080×773, en `488,287`. `kAEQuitApplication` cerró ese proceso y no quedó ningún `target/debug/cristal`.
+Después del corte, `git diff --check` no reportó espacios conflictivos. `cargo run` en `src-tauri` volvió a abrir la ventana: CoreGraphics la listó como `title=Cristal`, 1080×773, en `488,287`. `kAEQuitApplication` cerró ese proceso y no quedó ningún `target/debug/cristal`. Este plan no publicó la versión. La release es [PLAN-0013](PLAN-0013-publicar-0.2.0.md).

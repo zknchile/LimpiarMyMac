@@ -4,6 +4,8 @@ Limpieza clara para tu Mac. Cristal analiza la carpeta de tu usuario, te muestra
 
 La ventana es GPUI, sin vidrio, según [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). No usa `NSGlassEffectView` y no cumple [REQ-0003](docs/requirements/baseline.md). `cargo run` dentro de `src-tauri` abre esa ventana.
 
+La 0.2.0 para Apple Silicon está en [v0.2.0](https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.0). El disco no está firmado con un certificado de Apple ni notarizado. No hay binario para Mac Intel.
+
 ## Qué limpia
 
 | Categoría | Qué incluye | Marcada por defecto |
@@ -53,9 +55,10 @@ Si el selector apunta a Command Line Tools, el build usa `DEVELOPER_DIR=/Applica
 ```bash
 cd src-tauri
 cargo build --release
+../scripts/package_macos.sh
 ```
 
-El ejecutable queda en `src-tauri/target/release/cristal`. No hay `.app` firmado ni release.
+El ejecutable queda en `src-tauri/target/release/cristal`. El script arma `Cristal.app` y el `.dmg` de [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md). Esa release no está firmada con un certificado de Apple.
 
 ## Documentación
 
@@ -63,7 +66,7 @@ El método de trabajo sigue [Arquitectura_agent](https://github.com/zknchile/Arq
 
 - [AGENTS.md](AGENTS.md) — por dónde empezar.
 - [Requisitos](docs/requirements/baseline.md), [decisiones](docs/decisions/README.md), [pruebas](docs/testing/TEST-CASES.md) y [evolución](CHANGELOG.md).
-- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md) y se actualizó al cerrar [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). La ventana es GPUI. No aplica Liquid Glass y no cumple [REQ-0003](docs/requirements/baseline.md).
+- [Planes](docs/plans/PLAN-0001-documentar-desarrollo.md). El desarrollo inicial está reconstruido en [PLAN-0002](docs/plans/PLAN-0002-registro-desarrollo-cristal.md); no se escribió antes de programar. El tamaño de la selección se corrigió en [PLAN-0003](docs/plans/PLAN-0003-actualizar-tamano-seleccion.md). Los contenedores con enlaces, el registro interno de macOS y las copias `com.apple` dentro de otra app quedaron en [PLAN-0004](docs/plans/PLAN-0004-contenedor-sin-seguir-enlaces.md), [PLAN-0005](docs/plans/PLAN-0005-omitir-metadata-de-contenedor.md), [PLAN-0006](docs/plans/PLAN-0006-no-bloquear-copia-dentro-del-contenedor.md) y [PLAN-0007](docs/plans/PLAN-0007-nota-del-registro-visible.md). Salir quedó abajo a la derecha según [PLAN-0008](docs/plans/PLAN-0008-salir-junto-a-analizar.md). Las pruebas se fichan según [PLAN-0009](docs/plans/PLAN-0009-documentacion-de-pruebas.md). La grilla se queda donde se marcó según [PLAN-0010](docs/plans/PLAN-0010-grilla-sin-saltar.md). Este diagrama está en [PLAN-0011](docs/plans/PLAN-0011-diagrama-de-componentes.md) y se actualizó al cerrar [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). La ventana es GPUI. No aplica Liquid Glass y no cumple [REQ-0003](docs/requirements/baseline.md). La 0.2.0 se publicó según [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md).
 
 ## Cómo está armada
 

@@ -6,7 +6,7 @@ Línea base de lo que la persona usuaria pidió en la sesión del 2026-10-15. No
 |---|---|---|
 | REQ-0001 | App visual en Rust para macOS que limpie datos de navegadores y restos de aplicaciones ya borradas. | Confirmado e implementado. |
 | REQ-0002 | Primero analizar; con ese resultado decidir qué se puede borrar; después ofrecer ejecutar. | Confirmado e implementado. |
-| REQ-0003 | Interfaz Liquid Glass y fácil de usar. | Confirmado. La ventana usa el material nativo y una interfaz en español. La adaptación no reproduce todas las pautas del marco; ver [diseño](../design/liquid-glass.md). |
+| REQ-0003 | Interfaz Liquid Glass y fácil de usar. | Confirmado. La persona lo pidió. La ventana publicada el 2026-11-16 no usa `NSGlassEffectView` y no lo cumple; ver [diseño](../design/liquid-glass.md) y [ADR-0003](../decisions/ADR-0003-vista-gpui.md). |
 | REQ-0004 | Botón Salir siempre visible, en la esquina inferior derecha y a la derecha de Analizar. | Confirmado. El sitio cambió el 2026-10-15; ver [RD-0002](../decisions/RD-0002-salir-abajo-a-la-derecha.md). |
 | REQ-0005 | README que resuma el proyecto. | Confirmado e implementado. |
 | REQ-0006 | Subir el proyecto a GitHub. | Confirmado. Repositorio público https://github.com/zknchile/LimpiarMyMac. |

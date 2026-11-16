@@ -2,8 +2,8 @@
 
 ## 2026-11-16
 
-- La ventana que abre `cargo run` es GPUI. Se quitó la vista WebKit. No se aplica `NSGlassEffectView` y no se cumple [REQ-0003](docs/requirements/baseline.md). [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md) pasó a `Accepted`. [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md) quedó `Superseded by ADR-0003`. [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). No se subió la versión ni se creó una release.
-- El mismo día había quedado abierto el plan de esa prueba. El binario ya abría la ventana GPUI, y el HTML seguía en el árbol hasta el cierre.
+- Se publicó Cristal 0.2.0 para Apple Silicon. La ventana es GPUI y no aplica Liquid Glass. El disco no está firmado con un certificado de Apple ni notarizado. [PLAN-0013](docs/plans/PLAN-0013-publicar-0.2.0.md).
+- La ventana que abre `cargo run` pasó a GPUI. Se quitó la vista WebKit. No se aplica `NSGlassEffectView` y no se cumple [REQ-0003](docs/requirements/baseline.md). [ADR-0003](docs/decisions/ADR-0003-vista-gpui.md) pasó a `Accepted`. [ADR-0001](docs/decisions/ADR-0001-app-escritorio-tauri.md) quedó `Superseded by ADR-0003`. [PLAN-0012](docs/plans/PLAN-0012-migrar-vista-a-gpui.md). Esa migración no subió la versión; la publicación es el plan siguiente.
 
 ## 2026-10-15
 
