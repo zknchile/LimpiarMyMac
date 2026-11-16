@@ -11,7 +11,7 @@
 | --- | --- | --- | --- | --- |
 | TASK-0020-01 | Dejar el plan | Ninguna | Agente principal | completada |
 | TASK-0020-02 | Alinear versión y documentación | TASK-0020-01 | Agente principal | completada |
-| TASK-0020-03 | Empaquetar y publicar | TASK-0020-02 | Agente principal | pendiente |
+| TASK-0020-03 | Empaquetar y publicar | TASK-0020-02 | Agente principal | completada |
 
 ## TASK-0020-01 — Dejar el plan
 
@@ -44,4 +44,4 @@
 - **Aceptación y validación:** CoreGraphics lista la ventana del `.app` como `title=Cristal`. Tras `kAEQuitApplication` no queda un proceso `cristal` de esa app. La release apunta al commit empujado. Las notas incluyen el SHA-256 del `.dmg`.
 - **Responsable y estado:** según listado.
 - **Paralelismo, límites y entrega:** cierre. Entrega a la persona usuaria.
-- **Resultado y evidencia:** pendiente.
+- **Resultado y evidencia:** el 2026-11-16, `cargo test --lib` pasó 14 pruebas y 0 fallos. No cambió aserciones, así que no hay ficha nueva. `cargo build --release` produjo un binario arm64. El `.app` del `.dmg` dice versión 0.2.1 e identificador `com.limpiarmymac.cristal`. Abrió una ventana que CoreGraphics listó como `title=Cristal`, 1080×741, en `488,287`. `kAEQuitApplication` cerró ese proceso y no quedó `cristal`. `cff7c7a` quedó en `origin/main`. La release https://github.com/zknchile/LimpiarMyMac/releases/tag/v0.2.1 apunta a ese commit y adjunta el `.dmg` y las sumas. SHA-256: `50394dfd3cc6a6f25c3290c3082b2dd9545a8f4d4f644ec6c3b86e791755d495`. Este cierre es el commit siguiente.
